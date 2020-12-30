@@ -1,0 +1,8 @@
+{
+  "python.pythonPath": "venv\\Scripts\\python.exe",
+  "editor.detectIndentation": false,
+"editor.tabSize": 4,
+"python.linting.pylintEnabled": false,
+"python.linting.enabled": true,
+"python.linting.flake8Enabled": true
+}
