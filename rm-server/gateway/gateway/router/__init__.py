@@ -30,3 +30,9 @@ from gateway.router.requirementmanager.requirement.importfile.create import requ
 from gateway.router.requirementmanager.requirement.analyze.conflict import requirement_analyze_conflict
 from gateway.router.requirementmanager.requirement.analyze.relationship import requirement_analyze_relationship
 from gateway.router.requirementmanager.requirement.analyze.similarity import requirement_analyze_similarity
+
+from gateway.router.templatemanager.template.create import template_create
+from gateway.router.templatemanager.template.edit import template_edit
+from gateway.router.templatemanager.template.upload import template_upload
+from gateway.router.templatemanager.template.delete import template_delete
+from gateway.router.templatemanager.template.list import template_list

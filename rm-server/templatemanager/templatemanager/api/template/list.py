@@ -8,7 +8,7 @@ from templatemanager.utils.handle_api import handle_response
 META_SUCCESS = {'status': 200, 'msg': '成功！'}
 
 
-@app.route('user/list', methods=['GET'])
+@app.route('/user/list', methods=['GET'])
 @handle_response
 def template_list():
     template_list_mongodb_dao = TemplateListMongoDBDao(template_collection)

@@ -10,9 +10,9 @@ from gateway.http_client import templatemanager_http_client
 @app.route('/template/list', methods=['GET'])
 @handle_request_response
 @get_client_username
-def template_delete(client_username: str):
+def template_list(client_username: str):
     body = request.json
-    status_code, resp_body = templatemanager_http_client.delete(
+    status_code, resp_body = templatemanager_http_client.get(
         'template/list', client_username, json=body
     )
     return status_code, resp_body

@@ -5,7 +5,7 @@ from templatemanager.dao.template import (
     Template, TemplateMongoDBDao
 )
 from templatemanager.mongodb import template_collection
-from templatemanager.utils.handle_api import verify_system_role, handle_response
+from templatemanager.utils.handle_api import handle_response
 
 META_SUCCESS = {'status': 200, 'msg': '删除成功！'}
 META_ERROR = {'status': 404, 'msg': '删除失败！该模板不存在！'}

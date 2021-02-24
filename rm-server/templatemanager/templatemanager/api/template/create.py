@@ -6,7 +6,7 @@ from templatemanager.dao.template import (
     Template, TemplateMongoDBDao
 )
 from templatemanager.mongodb import template_collection
-from templatemanager.utils.handle_api import verify_system_role, handle_response
+from templatemanager.utils.handle_api import handle_response
 
 from docx import Document
 from time import asctime, localtime
