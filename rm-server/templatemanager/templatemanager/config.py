@@ -1,4 +1,4 @@
-# MONGODB_URL = "mongodb://localhost:27017/"
+MONGODB_URL = "mongodb://localhost:27017/"
 
-# PORT = 5001
+PORT = 5004
 IS_DEBUG = True

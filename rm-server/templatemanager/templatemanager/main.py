@@ -4,9 +4,9 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
-from usermanager.app import app
-import usermanager.router
-from usermanager.config import PORT, IS_DEBUG
+from templatemanager.app import app
+import templatemanager.router
+from templatemanager.config import PORT, IS_DEBUG
 
 
 if __name__ == '__main__':
