@@ -50,6 +50,20 @@
             </template>
           </el-menu-item>
         </el-submenu>
+        <!--模板管理一级菜单-->
+        <el-submenu index="3">
+          <template slot="title">
+            <i class="el-icon-files"></i>
+            <span>模板管理</span>
+          </template>
+          <!-- 二级菜单 -->
+          <el-menu-item index="/templates/templateList"  @click="saveNavStatus('/templates/templateList')">
+            <template>
+              <i class="el-icon-menu"></i>
+              <span>模板列表</span>
+            </template>
+          </el-menu-item>
+        </el-submenu>
       </el-menu>
     </el-aside>
     <!-- 主体区 -->
