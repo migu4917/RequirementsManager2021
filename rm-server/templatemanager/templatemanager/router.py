@@ -1,7 +1,5 @@
-# from usermanager.api.login import login
-# from usermanager.api.user.create import user_create
-# from usermanager.api.user.delete import user_delete
-# from usermanager.api.user.edit import user_edit
-# from usermanager.api.user.profile import user_profile
-# from usermanager.api.user.list import user_list
 from templatemanager.api.template.delete import template_delete
+from templatemanager.api.template.edit import template_edit
+from templatemanager.api.template.list import template_list
+from templatemanager.api.template.create import template_create
+from templatemanager.api.template.upload import template_upload

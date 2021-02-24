@@ -13,7 +13,7 @@ META_ERROR = {'status': 404, 'msg': '删除失败！该模板不存在！'}
 
 @app.route('/template/delete', methods=['DELETE'])
 @handle_response
-@verify_system_role
+# @verify_system_role
 def template_delete():
     body = request.json
     template_mongodb_dao = TemplateMongoDBDao(template_collection)

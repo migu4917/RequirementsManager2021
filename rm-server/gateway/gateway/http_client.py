@@ -44,9 +44,10 @@ class HttpClient:
 
 
 from gateway.config import (
-    USER_MANAGER_URL, PROJECT_MANAGER_URL, REQUIREMENT_MANAGER_URL
+    USER_MANAGER_URL, PROJECT_MANAGER_URL, REQUIREMENT_MANAGER_URL, TEMPLATE_MANAGET_URL
 )
 
 usermanager_http_client = HttpClient(USER_MANAGER_URL)
 projectmanager_http_client = HttpClient(PROJECT_MANAGER_URL)
 requirementmanager_http_client = HttpClient(REQUIREMENT_MANAGER_URL)
+templatemanager_http_client = HttpClient(TEMPLATE_MANAGET_URL)

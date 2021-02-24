@@ -7,16 +7,22 @@ from templatemanager.dao.template import (
 from templatemanager.mongodb import template_collection
 from templatemanager.utils.handle_api import verify_system_role, handle_response
 
+import time
+
 META_SUCCESS = {'status': 200, 'msg': '修改成功！'}
 META_ERROR = {'status': 404, 'msg': '修改失败！该模板不存在！'}
 
 
 @app.route('/template/edit', methods=['PUT'])
 @handle_response
-@verify_system_role
+# @verify_system_role
 def template_edit():
     body = request.json
-    template_name = body['template_name']
+
+    new_template = body['chosenTemplate']
+    template_name = new_template.template_name
+    new_template.last_time = time.localtime(time.time())
+
     template_mongodb_dao = TemplateMongoDBDao(template_collection)
 
     # check if template not exists
@@ -24,7 +30,7 @@ def template_edit():
     if not template:
         return {'meta': META_ERROR}
 
-    template_mongodb_dao.edit_template(template_name, body)
+    template_mongodb_dao.edit_template(template_name, new_template)
     return {'meta': META_SUCCESS}
 
 # from usermanager.app import app

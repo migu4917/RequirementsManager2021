@@ -21,7 +21,7 @@ os.makedirs(UPLOAD_FILE_DIRNAME, exist_ok=True)
 
 @app.route('/template/create', methods=['POST'])
 @handle_response
-@verify_system_role
+# @verify_system_role
 def template_create():
     body = request.json
 
