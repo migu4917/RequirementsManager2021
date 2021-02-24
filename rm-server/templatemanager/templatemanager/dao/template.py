@@ -24,12 +24,14 @@ from pymongo.collection import Collection
 @dataclass
 class Template:
     template_name: str
+    introduction: str
     last_time: str
     outline: str
 
     def jsonify(self) -> Dict:
         return {
             'template_name': self.template_name,
+            "introduction": self.introduction,
             "last_time": self.last_time,
             'outline': self.outline,
         }
