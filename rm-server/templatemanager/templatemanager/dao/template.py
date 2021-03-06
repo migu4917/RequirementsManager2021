@@ -23,6 +23,7 @@ from pymongo.collection import Collection
 
 @dataclass
 class Template:
+    _id: str
     template_name: str
     introduction: str
     last_time: str
@@ -30,6 +31,7 @@ class Template:
 
     def jsonify(self) -> Dict:
         return {
+            '_id': self._id,
             'template_name': self.template_name,
             "introduction": self.introduction,
             "last_time": self.last_time,

@@ -159,7 +159,7 @@ export default {
         }
       })
       if (res.meta.status === 200) {
-        this.userList = res.data
+        this.tempList = res.data
       } else {
         this.$message.error(res.meta.msg)
       }
