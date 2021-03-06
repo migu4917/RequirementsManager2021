@@ -15,6 +15,7 @@ import ImportRequirementDoc from './components/Requirements/ImportRequirementDoc
 import RequirementHomepage from './components/Requirements/RequirementHomepage.vue'
 import ArchiveProjectHomepage from './components/Projects/Archive/ProjectHomepage.vue'
 import ArchiveRequirementHomepage from './components/Requirements/Archive/RequirementHomepage.vue'
+import TemplateList from './components/Templates/TemplateList.vue'
 
 Vue.use(VueRouter)
 
@@ -48,7 +49,8 @@ const routes = [
         ]
       },
       { path: '/requirements/addSingleRequirement', component: AddSingleRequirement },
-      { path: '/requirements/importRequirementDoc', component: ImportRequirementDoc }
+      { path: '/requirements/importRequirementDoc', component: ImportRequirementDoc },
+      { path: '/templates/templateList', component: TemplateList}
     ]
   }
 ]
