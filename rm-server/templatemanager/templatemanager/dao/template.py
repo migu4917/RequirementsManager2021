@@ -76,7 +76,7 @@ class TemplateMongoDBDao(TemplateDao):
             {'template_name': template_name}
         )
         if template_dict:
-            template_dict.pop('_id')
+            # template_dict.pop('_id')
             template = Template(**template_dict)
         else:
             template = None

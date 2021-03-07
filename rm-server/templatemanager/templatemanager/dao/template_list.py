@@ -18,6 +18,6 @@ class TemplateListMongoDBDao(TemplateListDao):
         templates_list = self.collection.find()
         res = []
         for template_dict in templates_list:
-            template_dict.pop('_id')
+            # template_dict.pop('_id')
             res.append(Template(**template_dict))
         return res

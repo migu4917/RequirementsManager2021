@@ -18,7 +18,7 @@
           </el-input>
         </el-col>
       </el-row>
-      <el-table v-loading="loading" class="templateList-table" :data="tempList" border>
+      <el-table class="templateList-table" :data="tempList" border>
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="template_name" label="模板名"></el-table-column>
         <el-table-column prop="introduction" label="模板简介"></el-table-column>
@@ -44,15 +44,15 @@
     <!-- 模板查看与编辑功能区域 -->
     <el-dialog title="查看或编辑模板" width="50%" :visible.sync="editDialogVisible">
       <!-- 嵌套表单 -->
-      <el-form v-bind:model="this.chosenTemplate">
+      <el-form v-bind:model="chosenTemplate">
         <el-form-item label="模板名" label-width="15%">
-          <el-input v-model="this.chosenTemplate.template_name" :disabled="true"></el-input>
+          <el-input v-model="chosenTemplate.template_name" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="模板简介" label-width="15%">
-          <el-input type="textarea" v-model="this.chosenTemplate.introduction"></el-input>
+          <el-input type="textarea" v-model="chosenTemplate.introduction"></el-input>
         </el-form-item>
         <el-form-item label="修改时间" label-width="15%">
-          <el-input v-model="this.chosenTemplate.last_time" :disabled="true"></el-input>
+          <el-input v-model="chosenTemplate.last_time" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="模板大纲" label-width="15%">
           <el-input v-for="(item, index) in chosenTemplate.outline" :key="index" v-model="chosenTemplate.outline[index]"></el-input>
@@ -115,27 +115,20 @@ export default {
       uploadFileToken: '',
       currentUploadFileTag: '',
       uploadFileTags: [
-        {name: '上传中', type: 'primary' },
+        { name: '上传中', type: 'primary' },
         { name: '上传成功', type: 'success' },
         { name: '上传失败', type: 'danger' }
       ],
       currentItemizeTag: '',
-      itemizeTags: [{
-          name: '条目化中，请稍后...',
-          type: 'primary'
-        },
-        {
-          name: '条目化成功',
-          type: 'success'
-        },
-        {
-          name: '条目化失败',
-          type: 'danger'
-        }
+      itemizeTags: [
+        { name: '创建中，请稍后...', type: 'primary' },
+        { name: '创建成功', type: 'success' },
+        { name: '创建失败', type: 'danger' }
       ],
       // varibale about edit and view
       editDialogVisible: false,
       chosenTemplate: {
+        _id: '',
         template_name: 'TEST TEMPLATE',
         last_time: '',
         introduction: '',
@@ -163,30 +156,6 @@ export default {
       } else {
         this.$message.error(res.meta.msg)
       }
-      // let d1 = new Date(), d2 = new Date(), d3 = new Date()
-      // d1.setFullYear(2021, 0, 1)
-      // d2.setFullYear(2021, 0, 2)
-      // d3.setFullYear(2021, 0, 3)
-      // this.tempList = [{
-      //     template_name: 'GJB 438B-2009军用软件开发文档通用要求',
-      //     last_time: d1.toLocaleString(),
-      //     introduction: "1",
-      //     outline: ['1', '1', '1'],
-      //   },
-      //   {
-      //     template_name: 'GB 8567-88',
-      //     last_time: d2.toLocaleString(),
-      //     introduction: "2",
-      //     outline: ['2', '2', '2'],
-      //   },
-      //   {
-      //     template_name: 'GB T9385-2008',
-      //     last_time: d3.toLocaleString(),
-      //     introduction: "3",
-      //     outline: ['3', '3', '3'],
-      //   }
-      // ]
-      // await new Promise(resolve => setTimeout(resolve, 500))
       this.loading = false
     },
     deleteTemplate: function(template_name) {
@@ -291,7 +260,8 @@ export default {
     // 查看模板
     viewTemplate: function (index) {
       this.editDialogVisible = true
-      this.chosenTemplate = this.tempList[index]
+      this.chosenTemplate = Object.assign(this.tempList[index])
+      // this.chosenTemplate = this.tempList[index]
       // console.log(this.chosenTemplate.template_name)
     },
     // 编辑模板
