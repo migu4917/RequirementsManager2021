@@ -18,7 +18,7 @@
           </el-input>
         </el-col>
       </el-row>
-      <el-table class="templateList-table" :data="tempList" border>
+      <el-table v-loading='loadingTag' class="templateList-table" :data="tempList" border>
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="template_name" label="模板名"></el-table-column>
         <el-table-column prop="introduction" label="模板简介"></el-table-column>
@@ -32,6 +32,9 @@
           <template slot-scope="scope">
             <el-tooltip effect="light" content="查看或编辑模板" placement="top-start">
               <el-button type="primary" size="small" icon="el-icon-edit" @click="viewTemplate(scope.$index)"></el-button>
+            </el-tooltip>
+            <el-tooltip effect="light" content="下载模板文档" placement="top-start">
+              <el-button type="info" size="small" icon="el-icon-download" @click="downloadTemplate(scope.row.template_name)"></el-button>
             </el-tooltip>
             <el-tooltip effect="light" content="删除模板" placement="top-start">
               <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteTemplate(scope.row.template_name)"></el-button>
@@ -69,33 +72,33 @@
       <!-- 头部提示 -->
       <el-alert title="从文本导入模板" type="info" center show-icon></el-alert>
       <!-- 上传功能主体 -->
-      <!-- <el-tabs tab-position="left" style="overflow: auto;"> -->
-      <!-- <el-tab-pane label="上传文件" name="0"> -->
-      <el-button style="margin-bottom: 10px;margin-top: 10px;" size="small" type="primary" @click="submitUploadFile()">
-        上传至服务器
-      </el-button>
-      <el-tag v-for="tag in uploadFileTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentUploadFileTag"
-        style="margin-left: 10px;">
-        {{tag.name}}
-      </el-tag>
-      <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :on-remove="removeUploadFile"
-        :auto-upload="true">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">
-          将文件拖到此处，或<em>点击选取文件</em>
-        </div>
-        <div slot="tip" class="el-upload__tip">只能上传doc/docx文件</div>
-      </el-upload>
-      <el-input v-model="introduction" type="textarea" :rows="2" placeholder="请输入文档简介" style="width: 30%;margin-top: 10px;margin-bottom: 10px;"></el-input>
-      <div>
-        <el-button type="success" size="small" @click="createTemplate()">创建模板</el-button>
-        <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag"
+      <el-tabs tab-position="left" style="overflow: auto;">
+        <el-tab-pane label="上传文件" name="0">
+        <el-button style="margin-bottom: 10px;margin-top: 10px;" size="small" type="primary" @click="submitUploadFile()">
+          上传至服务器
+        </el-button>
+        <el-tag v-for="tag in uploadFileTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentUploadFileTag"
           style="margin-left: 10px;">
           {{tag.name}}
         </el-tag>
-      </div>
-      <!-- </el-tab-pane> -->
-      <!-- </el-tabs> -->
+        <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :on-remove="removeUploadFile"
+          :auto-upload="true">
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或<em>点击选取文件</em>
+          </div>
+          <div slot="tip" class="el-upload__tip">只能上传doc/docx文件</div>
+        </el-upload>
+        <el-input v-model="introduction" type="textarea" :rows="2" placeholder="请输入文档简介" style="width: 30%;margin-top: 10px;margin-bottom: 10px;"></el-input>
+        <div>
+          <el-button type="success" size="small" @click="createTemplate()">创建模板</el-button>
+          <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag"
+            style="margin-left: 10px;">
+            {{tag.name}}
+          </el-tag>
+        </div>
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
   </div>
 </template>
@@ -135,13 +138,13 @@ export default {
         outline: '',
       },
       // loading
-      loading: true,
+      loadingTag: true,
     }
   },
   methods: {
     // 拉取列表
     getTemplateList: async function () {
-      this.loading = true
+      this.loadingTag = true
       const {
         data: res
       } = await this.$http({
@@ -156,7 +159,7 @@ export default {
       } else {
         this.$message.error(res.meta.msg)
       }
-      this.loading = false
+      this.loadingTag = false
     },
     deleteTemplate: function(template_name) {
       this.$messageBox('此操作将永久删除该模板, 是否继续?', '提示', {
@@ -220,12 +223,12 @@ export default {
       })
       if (res.meta.status === 200) {
         this.$message.success(res.meta.msg)
-        this.currentUploadFileTag = '创建成功'
+        this.currentUploadFileTag = '上传成功'
         this.uploadFileToken = res.data.token
         console.log(this.uploadFileToken)
       } else {
         this.$message.error(res.meta.msg)
-        this.currentUploadFileTag = '创建失败'
+        this.currentUploadFileTag = '上传失败'
       }
     },
     // 创建模板
@@ -286,6 +289,10 @@ export default {
           this.editDialogVisible = false
         })
         .catch(() => {})
+    },
+    // 下载模板文档
+    downloadTemplate: async function(file) {
+
     }
   }
 }

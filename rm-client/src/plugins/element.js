@@ -42,7 +42,8 @@ import {
   Upload,
   Tag,
   Cascader,
-  Divider
+  Divider,
+  Loading
 } from 'element-ui'
 
 Vue.use(Button)
@@ -86,6 +87,7 @@ Vue.use(Upload)
 Vue.use(Tag)
 Vue.use(Cascader)
 Vue.use(Divider)
+Vue.use(Loading)
 
 Vue.prototype.$message = Message
 Vue.prototype.$messageBox = MessageBox.confirm

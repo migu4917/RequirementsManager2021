@@ -49,7 +49,13 @@ export default {
     login () {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading'
+        })
         const { data: res } = await this.$http.post('/login', this.loginForm)
+        loading.close()
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
         else {
           this.$message.success(res.meta.msg)

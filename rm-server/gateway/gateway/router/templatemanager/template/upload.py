@@ -11,8 +11,9 @@ from gateway.http_client import templatemanager_http_client
 @handle_request_response
 @get_client_username
 def template_upload(client_username: str):
-    body = request.json
+    upload_file = request.files['file']
+    files = {'file': (upload_file.filename, upload_file.read())}
     status_code, resp_body = templatemanager_http_client.post(
-        'template/upload', client_username, json=body
+        'template/upload', client_username, files=files
     )
     return status_code, resp_body
