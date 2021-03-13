@@ -19,7 +19,7 @@ META_ERROR = {'status': 404, 'msg': '修改失败！该模板不存在！'}
 def template_edit():
     body = request.json
 
-    new_template = body['chosenTemplate']
+    new_template = Template(**body)
     template_name = new_template.template_name
     new_template.last_time = time.localtime(time.time())
 
@@ -30,7 +30,7 @@ def template_edit():
     if not template:
         return {'meta': META_ERROR}
 
-    template_mongodb_dao.edit_template(template_name, new_template)
+    template_mongodb_dao.edit_template(template_name, new_template.jsonify())
     return {'meta': META_SUCCESS}
 
 # from usermanager.app import app
