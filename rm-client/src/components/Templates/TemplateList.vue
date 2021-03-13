@@ -22,12 +22,7 @@
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="template_name" label="模板名"></el-table-column>
         <el-table-column prop="introduction" label="模板简介"></el-table-column>
-        <el-table-column label="最后修改时间">
-          <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span>{{ scope.row.last_time }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="last_time" label="最后修改时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-tooltip effect="light" content="查看或编辑模板" placement="top-start">
@@ -89,7 +84,7 @@
           </div>
           <div slot="tip" class="el-upload__tip">只能上传doc/docx文件</div>
         </el-upload>
-        <el-input v-model="introduction" type="textarea" :rows="2" placeholder="请输入文档简介" style="width: 30%;margin-top: 10px;margin-bottom: 10px;"></el-input>
+        <el-input v-model="introduction" type="textarea" :rows="2" placeholder="请输入文档简介" style="width: 40%;margin-top: 10px;margin-bottom: 10px;"></el-input>
         <div>
           <el-button type="success" size="small" @click="createTemplate()">创建模板</el-button>
           <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag"
@@ -132,7 +127,7 @@ export default {
       editDialogVisible: false,
       chosenTemplate: {
         _id: '',
-        template_name: 'TEST TEMPLATE',
+        template_name: '',
         last_time: '',
         introduction: '',
         outline: '',
@@ -255,6 +250,7 @@ export default {
         this.currentItemizeTag = '创建模板成功'
         console.log(this.introduction)
         this.introduction = ''
+        this.getTemplateList()
       } else {
         this.$message.error(res.meta.msg)
         this.currentItemizeTag = '创建模板失败'
@@ -263,14 +259,15 @@ export default {
     // 查看模板
     viewTemplate: function (index) {
       this.editDialogVisible = true
-      this.chosenTemplate = Object.assign(this.tempList[index])
+      this.chosenTemplate = JSON.parse(JSON.stringify(this.tempList[index]))
       // this.chosenTemplate = this.tempList[index]
       // console.log(this.chosenTemplate.template_name)
     },
     // 编辑模板
     editTemplate: async function () {
-      this.$confirm('确认提交该模板？(该操作不可逆)')
-        .then(async () => {
+      this.$messageBox('确认提交该模板？(该操作不可逆)', {
+        type: 'warning'
+      }).then(async () => {
           const {
             data: res
           } = await this.$http({
@@ -283,6 +280,7 @@ export default {
           })
           if (res.meta.status === 200) {
             this.$message.success(res.meta.msg)
+            this.getTemplateList()
           } else {
             this.$message.error(res.meta.msg)
           }
@@ -292,7 +290,20 @@ export default {
     },
     // 下载模板文档
     downloadTemplate: async function(file) {
-
+      console.log("开始下载" + file);
+      // const {
+      //   data: res
+      // } = await this.$http({
+      //   method: 'get',
+      //   // url: '/template/download',
+      //   headers: {
+      //     'Authorization': window.sessionStorage.getItem('token')
+      //   },
+      //   data: {
+      //     // token: this.uploadFileToken,
+      //     // introduction: this.introduction
+      //   }
+      // })
     }
   }
 }
