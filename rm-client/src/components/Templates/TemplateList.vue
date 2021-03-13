@@ -271,7 +271,7 @@ export default {
           const {
             data: res
           } = await this.$http({
-            method: 'post',
+            method: 'put',
             url: '/template/edit',
             headers: {
               'Authorization': window.sessionStorage.getItem('token')
