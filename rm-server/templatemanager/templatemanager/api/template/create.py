@@ -7,6 +7,7 @@ from templatemanager.dao.template import (
 )
 from templatemanager.mongodb import template_collection
 from templatemanager.utils.handle_api import handle_response
+from templatemanager.utils.uuid import generate_uuid
 
 from docx import Document
 from time import asctime, localtime
@@ -17,6 +18,22 @@ META_ERROR_NO_FILE = {'status': 404, 'msg': '创建失败，文件不存在！'}
 
 UPLOAD_FILE_DIRNAME = 'uploads'
 os.makedirs(UPLOAD_FILE_DIRNAME, exist_ok=True)
+
+
+def parse_docx(path):
+    print(path)
+    if not os.path.exists(path):
+        return []
+    if path.endswith('.doc'):
+        pass
+    docx = Document(path)
+    paragraphs = list(map(lambda x: x.text, docx.paragraphs))
+    return paragraphs
+
+
+if __name__ == '__main__':
+    para = parse_docx('uploads/GJB438B-2009军用软件需求规格说明 模板.docx')
+    print(para)
 
 
 @app.route('/template/create', methods=['POST'])
@@ -35,20 +52,18 @@ def template_create():
             'meta': META_ERROR_NO_FILE
         }
     # parse the docx
-    docx = Document(filepath)
-    paragraphs = list(docx.paragraphs)
-
-    template_mongodb_dao = TemplateMongoDBDao(template_collection)
+    outline = parse_docx(filepath)
 
     template_name = filetoken
     introduction = body['introduction']
-    outline = str(paragraphs)
+
+    template_mongodb_dao = TemplateMongoDBDao(template_collection)
     # check if template exists
     if template_mongodb_dao.get_template(template_name):
         return {'meta': META_ERROR_ALREADY_EXIST}
 
-    template = Template(template_name=template_name, introduction=introduction, last_time=asctime(localtime()),
-                        outline=outline)
+    template = Template(_id=generate_uuid(), template_name=template_name, introduction=introduction,
+                        last_time=asctime(localtime()), outline=outline)
     template_mongodb_dao.create_template(template)
     return {'meta': META_SUCCESS}
 
