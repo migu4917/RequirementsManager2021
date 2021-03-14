@@ -76,19 +76,15 @@
           style="margin-left: 10px;">
           {{tag.name}}
         </el-tag>
-        <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :on-remove="removeUploadFile"
-          :auto-upload="true">
+        <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :auto-upload="true">
           <i class="el-icon-upload"></i>
-          <div class="el-upload__text">
-            将文件拖到此处，或<em>点击选取文件</em>
-          </div>
-          <div slot="tip" class="el-upload__tip">只能上传doc/docx文件</div>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击选取文件</em></div>
+          <div slot="tip" class="el-upload__tip">只能上传docx文件</div>
         </el-upload>
         <el-input v-model="introduction" type="textarea" :rows="2" placeholder="请输入文档简介" style="width: 40%;margin-top: 10px;margin-bottom: 10px;"></el-input>
         <div>
           <el-button type="success" size="small" @click="createTemplate()">创建模板</el-button>
-          <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag"
-            style="margin-left: 10px;">
+          <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag" style="margin-left: 10px;">
             {{tag.name}}
           </el-tag>
         </div>
@@ -192,11 +188,11 @@ export default {
       this.uploadFile = file.file
       this.currentUploadFileTag = ''
     },
-    // 移除文件
-    removeUploadFile: function(file) {
-      this.uploadFile = null
-      this.currentUploadFileTag = ''
-    },
+    // // 移除文件
+    // removeUploadFile: function(file) {
+    //   this.uploadFile = null
+    //   this.currentUploadFileTag = ''
+    // },
     // 上传模板
     submitUploadFile: async function() {
       if (!this.uploadFile) {
