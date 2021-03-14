@@ -20,9 +20,10 @@ def template_edit():
     body = request.json
 
     new_template = Template(**body)
-    template_name = new_template.template_name
-    new_template.last_time = time.localtime(time.time())
+    new_template.last_time = time.asctime(time.localtime())
+    new_template.outline = list(filter(lambda x: len(x) != 0, new_template.outline))
 
+    template_name = new_template.template_name
     template_mongodb_dao = TemplateMongoDBDao(template_collection)
 
     # check if template not exists
