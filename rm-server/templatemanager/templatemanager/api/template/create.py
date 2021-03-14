@@ -17,18 +17,16 @@ META_ERROR_ALREADY_EXIST = {'status': 400, 'msg': '创建失败，该模板已�
 META_ERROR_NO_FILE = {'status': 404, 'msg': '创建失败，文件不存在！'}
 
 UPLOAD_FILE_DIRNAME = 'uploads'
-os.makedirs(UPLOAD_FILE_DIRNAME, exist_ok=True)
+# os.makedirs(UPLOAD_FILE_DIRNAME, exist_ok=True)
 
 
 def parse_docx(path):
     print(path)
     if not os.path.exists(path):
         return []
-    if path.endswith('.doc'):
-        pass
     docx = Document(path)
     paragraphs = list(map(lambda x: x.text, docx.paragraphs))
-    paragraphs = list(filter(lambda x: len(x) != 0, paragraphs))
+    paragraphs = list(filter(lambda x: len(x) > 0, paragraphs))
     return paragraphs
 
 

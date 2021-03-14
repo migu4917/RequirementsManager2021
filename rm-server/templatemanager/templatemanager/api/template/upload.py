@@ -15,7 +15,7 @@ os.makedirs(UPLOAD_FILE_DIRNAME, exist_ok=True)
 @handle_response
 def template_upload():
     upload_file = request.files['file']
-    if (not upload_file.filename.endswith('.doc')) and (not upload_file.filename.endswith('.docx')):
+    if not upload_file.filename.endswith('.docx'):
         return {
             'meta': META_ERROR_BAD_FILE
         }
