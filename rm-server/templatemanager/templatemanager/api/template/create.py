@@ -28,6 +28,7 @@ def parse_docx(path):
         pass
     docx = Document(path)
     paragraphs = list(map(lambda x: x.text, docx.paragraphs))
+    paragraphs = list(filter(lambda x: len(x) != 0, paragraphs))
     return paragraphs
 
 
