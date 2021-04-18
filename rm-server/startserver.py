@@ -15,8 +15,8 @@ import requirementmanager.main
 serverCmds = [
     "python gateway/gateway/main.py flask",
     "python usermanager/usermanager/main.py flask",
-    #"python projectmanager/projectmanager/main.py flask",
-    #"python requirementmanager/requirementmanager/main.py flask",
+    "python projectmanager/projectmanager/main.py flask",
+    "python requirementmanager/requirementmanager/main.py flask",
     "python templatemanager/templatemanager/main.py flask",
 ]
 

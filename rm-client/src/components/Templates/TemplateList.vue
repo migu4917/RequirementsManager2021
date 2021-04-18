@@ -19,8 +19,16 @@
         </el-col>
       </el-row>
       <el-table v-loading='loadingTag' class="templateList-table" :data="tempList" border>
+        <el-table-column  type="expand">
+          <!-- todo -->
+        </el-table-column>
         <el-table-column type="index" label="#"></el-table-column>
-        <el-table-column prop="template_name" label="模板名"></el-table-column>
+        <el-table-column prop="template_name" label="模板名">
+          <!-- <template slot-scope="props">
+            <el-form label-position="left">
+            </el-form>
+          </template> -->
+        </el-table-column>
         <el-table-column prop="introduction" label="模板简介"></el-table-column>
         <el-table-column prop="last_time" label="最后修改时间"></el-table-column>
         <el-table-column label="操作">
@@ -76,7 +84,7 @@
           style="margin-left: 10px;">
           {{tag.name}}
         </el-tag>
-        <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :auto-upload="true">
+        <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :auto-upload="true" accept=".docx">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击选取文件</em></div>
           <div slot="tip" class="el-upload__tip">只能上传docx文件</div>
@@ -287,19 +295,19 @@ export default {
     // 下载模板文档
     downloadTemplate: async function(file) {
       console.log("开始下载" + file);
-      // const {
-      //   data: res
-      // } = await this.$http({
-      //   method: 'get',
-      //   // url: '/template/download',
-      //   headers: {
-      //     'Authorization': window.sessionStorage.getItem('token')
-      //   },
-      //   data: {
-      //     // token: this.uploadFileToken,
-      //     // introduction: this.introduction
-      //   }
-      // })
+      const {
+        data: res
+      } = await this.$http({
+        method: 'get',
+        url: '/template/download',
+        headers: {
+          'Authorization': window.sessionStorage.getItem('token')
+        },
+        data: {
+          // token: this.uploadFileToken,
+          // introduction: this.introduction
+        }
+      })
     }
   }
 }

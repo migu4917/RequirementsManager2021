@@ -30,9 +30,9 @@ def parse_docx(path):
     return paragraphs
 
 
-if __name__ == '__main__':
-    para = parse_docx('uploads/GJB438B-2009军用软件需求规格说明 模板.docx')
-    print(para)
+# if __name__ == '__main__':
+#     para = parse_docx('uploads/GJB438B-2009军用软件需求规格说明 模板.docx')
+#     print(para)
 
 
 @app.route('/template/create', methods=['POST'])
