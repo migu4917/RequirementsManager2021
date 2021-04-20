@@ -61,8 +61,11 @@ def template_create():
     if template_mongodb_dao.get_template(template_name):
         return {'meta': META_ERROR_ALREADY_EXIST}
 
-    template = Template(_id=generate_uuid(), template_name=template_name, introduction=introduction,
-                        last_time=asctime(localtime()), outline=outline)
+    template = Template(_id=generate_uuid(),
+                        template_name=template_name,
+                        introduction=introduction,
+                        last_time=asctime(localtime()),
+                        outline=outline)
     template_mongodb_dao.create_template(template)
     return {'meta': META_SUCCESS}
 

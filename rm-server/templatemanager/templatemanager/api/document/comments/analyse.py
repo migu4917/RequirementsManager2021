@@ -5,11 +5,16 @@ from templatemanager.app import app
 
 from templatemanager.utils.handle_api import handle_response
 
-META_SUCCESS = {'status': 200, 'msg': '创建成功！'}
+META_SUCCESS = {'status': 200, 'msg': '分析成功！'}
+META_WRONG_FORMAT = {'status': 400, 'msg': '数据格式错误！'}
+META_ERROR = {'status': 404, 'msg': '评论数据不存在！'}
 
 
 @app.route('document/comments/analyse', methods=['POST'])
 @handle_response
 def comments_analyse():
     body = request.json
-    return META_SUCCESS
+
+    comments_file_name = body['comments_file_name']
+
+    return {'meta': META_SUCCESS}

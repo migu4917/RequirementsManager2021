@@ -1,24 +1,44 @@
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from pymongo.collection import Collection
+
+from templatemanager.utils.uuid import generate_uuid
+
+from time import asctime, localtime
 
 
 @dataclass
 class Document:
-    id: str
-    document_name: str
-    introduction: str
-    last_time: str
-    content: str  # todo
+    def __init__(self, document_name: str, template_name: str, introduction: str, outline: list):
+        # typing declaration
+        self.id: str
+        self.document_name: str
+        self.template_name: str
+        self.introduction: str
+        self.last_time: str
+        self.contents: List[Tuple]
+        self.comments_file_list: List[str]
+        # assignment
+        self.id = generate_uuid()
+        self.document_name = document_name
+        self.template_name = template_name
+        self.introduction = introduction
+        self.last_time = asctime(localtime())
+        self.contents = []
+        for line in outline:
+            self.contents.append((line, ""))
+        self.comments_file_list = []
 
     def jsonify(self) -> Dict:
         return {
             'id': self.id,
             'document_name': self.document_name,
+            'template_name': self.template_name,
             "introduction": self.introduction,
             "last_time": self.last_time,
-            'content': self.content,
+            'contents': self.contents,
+            'comments_file_list': self.comments_file_list,
         }
 
 
