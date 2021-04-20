@@ -15,4 +15,8 @@ class DocumentListMongoDBDao(DocumentListDao):
         self.collection = collection
 
     def get_all_document(self) -> List[Document]:
-        pass
+        document_list = self.collection.find()
+        res = []
+        for document_dict in document_list:
+            res.append(Document(**document_dict))
+        return res

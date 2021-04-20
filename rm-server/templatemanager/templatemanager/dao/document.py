@@ -6,7 +6,7 @@ from pymongo.collection import Collection
 
 @dataclass
 class Document:
-    _id: str
+    id: str
     document_name: str
     introduction: str
     last_time: str
@@ -14,7 +14,7 @@ class Document:
 
     def jsonify(self) -> Dict:
         return {
-            '_id': self._id,
+            'id': self.id,
             'document_name': self.document_name,
             "introduction": self.introduction,
             "last_time": self.last_time,
@@ -44,16 +44,23 @@ class DocumentMongoDBDao(DocumentDao):
         self.collection = collection
 
     def create_document(self, document: Document):
-        pass
+        self.collection.insert_one(document.jsonify())
 
-    def delete_document(self, _id: str):
-        pass
+    def delete_document(self, document_id: str):
+        self.collection.delete_one({"id": document_id})
 
-    def edit_document(self, _id: str, attributes: Dict):
-        pass
+    def edit_document(self, document_id: str, attributes: Dict):
+        new_values = {"$set": attributes}
+        self.collection.update_one(
+            {"id": document_id},
+            new_values
+        )
 
-    def get_document(self, _id: str) -> Document:
-        pass
-
-    def get_all_document(self) -> List[Document]:
-        pass
+    def get_document(self, document_id: str) -> Document:
+        document_dict = self.collection.find_one(
+            {"id": document_id}
+        )
+        document = None
+        if document_dict:
+            document = Document(**document_dict)
+        return document
