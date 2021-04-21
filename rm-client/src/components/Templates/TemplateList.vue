@@ -19,15 +19,13 @@
         </el-col>
       </el-row>
       <el-table v-loading='loadingTag' class="templateList-table" :data="tempList" border>
-        <el-table-column  type="expand">
-          <!-- todo -->
-        </el-table-column>
+        <!-- <el-table-column type="expand">
+          <template>
+            <el-button>创建新文档</el-button>
+          </template>
+        </el-table-column> -->
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="template_name" label="模板名">
-          <!-- <template slot-scope="props">
-            <el-form label-position="left">
-            </el-form>
-          </template> -->
         </el-table-column>
         <el-table-column prop="introduction" label="模板简介"></el-table-column>
         <el-table-column prop="last_time" label="最后修改时间"></el-table-column>

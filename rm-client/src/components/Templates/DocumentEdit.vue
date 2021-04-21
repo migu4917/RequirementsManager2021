@@ -11,7 +11,8 @@
       </el-breadcrumb>
     </div>
     <!-- 主体区域 -->
-    <el-tabs v-model="" tab-position="top" style="overflow: auto;">
+    <!-- v-model="" -->
+    <el-tabs tab-position="top" style="overflow: auto;">
       <!-- 文档编辑区域 -->
       <el-tab-pane label="需求文档编辑" name="0">
         <el-row :gutter="20" style="margin-bottom: 20px;">
@@ -34,16 +35,25 @@
       </el-tab-pane>
       <!-- 用户需求区域 -->
       <el-tab-pane label="用户反馈管理和分析" name="1">
+        <!-- 用户需求文件下拉列表 -->
+
+        <!-- 用户需求分析按钮 -->
+        <el-button></el-button>
+        <!-- 用户需求词云按钮 -->
+        <el-button></el-button>
+        <!-- 用户需求分类表格 -->
+        
       </el-tab-pane>
     </el-tabs>
+    <!-- test -->
     <!-- 文档编辑区域 -->
     <el-card class="box-card" style="margin-top: 15px;">
       <!-- 用户需求文件下拉列表 -->
-      
+
       <!-- 用户需求分析按钮 -->
-      
+
       <!-- 用户需求词云按钮 -->
-      
+
       <!-- 用户需求分类表格 -->
     </el-card>
     <!-- 用户需求区域 -->

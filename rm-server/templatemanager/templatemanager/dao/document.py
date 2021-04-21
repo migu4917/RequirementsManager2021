@@ -84,3 +84,10 @@ class DocumentMongoDBDao(DocumentDao):
         if document_dict:
             document = Document(**document_dict)
         return document
+
+    def get_all_document(self) -> List[Document]:
+        document_list = self.collection.find()
+        res = []
+        for document_dict in document_list:
+            res.append(Document(**document_dict))
+        return res
