@@ -17,6 +17,7 @@ import ArchiveProjectHomepage from './components/Projects/Archive/ProjectHomepag
 import ArchiveRequirementHomepage from './components/Requirements/Archive/RequirementHomepage.vue'
 import TemplateList from './components/Templates/TemplateList.vue'
 import DocumentEdit from './components/Templates/DocumentEdit.vue'
+import DocumentList from './components/Templates/DocumentList.vue'
 
 Vue.use(VueRouter)
 
@@ -57,7 +58,8 @@ const routes = [
         children: [
           { path: '/templates/documentEdit', component: DocumentEdit }
         ]
-      }
+      },
+      { path: '/templates/documentList', component: DocumentList }
     ]
   }
 ]

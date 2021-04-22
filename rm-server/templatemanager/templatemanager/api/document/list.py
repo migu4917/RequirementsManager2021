@@ -13,8 +13,21 @@ META_SUCCESS = {'status': 200, 'msg': '获取成功！'}
 META_ERROR_NO_DOCUMENT = {'status': 404, 'msg': '获取失败，文档不存在！'}
 
 
-@app.route('document/list', methods=['GET'])
+@app.route('/document/list', methods=['GET'])
 @handle_response
 def document_list():
-    body = request.json
-    return {'meta': META_SUCCESS}
+    # body = request.json
+
+    document_mongodb_dao = DocumentMongoDBDao(document_collection)
+
+    documents = document_mongodb_dao.get_all_document()
+
+    data = []
+
+    for document in documents:
+        data.append(document.jsonify())
+
+    return {
+        'meta': META_SUCCESS,
+        "data": data
+    }

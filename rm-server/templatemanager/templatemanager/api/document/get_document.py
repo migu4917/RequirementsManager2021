@@ -13,7 +13,7 @@ META_SUCCESS = {'status': 200, 'msg': '获取成功！'}
 META_ERROR_NO_DOCUMENT = {'status': 404, 'msg': '获取失败，文档不存在！'}
 
 
-@app.route('document/get_document', methods=['GET'])
+@app.route('/document/get_document', methods=['GET'])
 @handle_response
 def document_get():
     body = request.json

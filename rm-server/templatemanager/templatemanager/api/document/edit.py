@@ -15,7 +15,7 @@ META_SUCCESS = {'status': 200, 'msg': '修改成功！'}
 META_ERROR_NO_DOCUMENT = {'status': 404, 'msg': '修改失败，该文档不存在！'}
 
 
-@app.route('document/edit', methods=['POST'])
+@app.route('/document/edit', methods=['POST'])
 @handle_response
 def document_edit():
     body = request.json

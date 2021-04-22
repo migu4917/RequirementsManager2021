@@ -18,7 +18,7 @@ META_SUCCESS = {'status': 200, 'msg': '创建成功！'}
 META_ERROR_NO_TEMPLATE = {'status': 404, 'msg': '创建失败，对应模板不存在！'}
 
 
-@app.route('document/create', methods=['POST'])
+@app.route('/document/create', methods=['POST'])
 @handle_response
 def document_create():
     body = request.json

@@ -13,7 +13,7 @@ META_SUCCESS = {'status': 200, 'msg': '删除成功！'}
 META_ERROR_NO_DOCUMENT = {'status': 404, 'msg': '删除失败，文档不存在！'}
 
 
-@app.route('document/delete', methods=['DELETE'])
+@app.route('/document/delete', methods=['DELETE'])
 @handle_response
 def document_delete():
     body = request.json

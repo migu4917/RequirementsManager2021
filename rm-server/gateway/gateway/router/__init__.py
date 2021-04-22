@@ -36,3 +36,6 @@ from gateway.router.templatemanager.template.edit import template_edit
 from gateway.router.templatemanager.template.upload import template_upload
 from gateway.router.templatemanager.template.delete import template_delete
 from gateway.router.templatemanager.template.list import template_list
+
+from gateway.router.templatemanager.document.list import document_list
+from gateway.router.templatemanager.document.create import document_create
