@@ -39,3 +39,11 @@ from gateway.router.templatemanager.template.list import template_list
 
 from gateway.router.templatemanager.document.list import document_list
 from gateway.router.templatemanager.document.create import document_create
+from gateway.router.templatemanager.document.delete import document_delete
+from gateway.router.templatemanager.document.edit import document_edit
+from gateway.router.templatemanager.document.download import document_download
+from gateway.router.templatemanager.document.get_document import document_get
+
+from gateway.router.templatemanager.document.comments.classify import comments_classsify
+from gateway.router.templatemanager.document.comments.wordcloud import comments_wordcloud
+from gateway.router.templatemanager.document.comments.upload import comments_upload

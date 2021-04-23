@@ -5,6 +5,8 @@ from templatemanager.app import app
 
 from templatemanager.utils.handle_api import handle_response
 
+from sklearn.neural_network import MLPClassifier
+
 META_SUCCESS = {'status': 200, 'msg': '分析成功！'}
 META_WRONG_FORMAT = {'status': 400, 'msg': '数据格式错误！'}
 META_ERROR = {'status': 404, 'msg': '评论数据不存在！'}
