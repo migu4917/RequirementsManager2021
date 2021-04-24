@@ -122,17 +122,15 @@
       },
       getDocumentList: async function() {
         this.loadingTag = true
-        console.log('waiting');
         const {
           data: res
         } = await this.$http({
-          methods: 'get',
+          method: 'get',
           url: '/document/list',
           headers: {
             'Authorization': window.sessionStorage.getItem('token')
           }
         })
-        console.log('finish');
         if (res.meta.status === 200) {
           this.documentList = res.data
         } else {
@@ -150,15 +148,15 @@
         const {
           data: res
         } = await this.$http({
-          methods: 'post',
+          method: 'post',
           url: '/document/create',
           headers: {
             'Authorization': window.sessionStorage.getItem('token')
           },
           data: {
-            "template_name": this.chosenTemplateName,
-            "document_name": this.newDocumentTitle,
-            "introduction": this.newDocumentIntroduction
+            template_name: this.chosenTemplateName,
+            document_name: this.newDocumentTitle,
+            introduction: this.newDocumentIntroduction
           }
         })
         if (res.meta.status === 200) {
@@ -171,7 +169,35 @@
         }
       },
       deleteDocument: async function(document_id) {
-        // todo
+        console.log(document_id);
+        this.$messageBox('此操作将永久删除该文档, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          async () => {
+            const {
+              data: res
+            } = await this.$http({
+              method: 'delete',
+              url: '/document/delete',
+              headers: {
+                'Authorization': window.sessionStorage.getItem('token')
+              },
+              data: {
+                'document_id': document_id
+              }
+            })
+            if (res.meta.status === 200) {
+              this.$message.success(res.meta.msg)
+              this.getDocumentList()
+            } else {
+              this.$message.error(res.meta.msg)
+            }
+          }
+        ).catch(() => {
+          this.$message.info('已取消删除')
+        })
       },
       downloadDocument: async function(document_id) {
         // todo

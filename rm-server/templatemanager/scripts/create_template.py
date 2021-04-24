@@ -3,6 +3,9 @@ from templatemanager.dao.template import (
     Template, TemplateMongoDBDao,
     # SYSTEM_ROLE_SYSTEM_MANAGER, SYSTEM_ROLE_COMMON_USER
 )
+from templatemanager.dao.document import (
+    Document, DocumentMongoDBDao
+)
 
 if __name__ == '__main__':
     template_collection.drop()

@@ -6,7 +6,7 @@ from gateway.utils.handle_api import (
 )
 from gateway.http_client import templatemanager_http_client
 
-@app.route('document/comments/upload', methods=['PUT'])
+@app.route('/document/comments/upload', methods=['PUT'])
 @handle_request_response
 @get_client_username
 def comments_upload(client_username: str):

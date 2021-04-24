@@ -10,7 +10,7 @@ from time import asctime, localtime
 
 @dataclass
 class Document:
-    def __init__(self, document_name: str, template_name: str, introduction: str, outline: list):
+    def __init__(self, document_name: str = "", template_name: str = "", introduction: str = "", outline: list = []):
         # typing declaration
         self.id: str
         self.document_name: str
@@ -89,5 +89,7 @@ class DocumentMongoDBDao(DocumentDao):
         document_list = self.collection.find()
         res = []
         for document_dict in document_list:
-            res.append(Document(**document_dict))
+            doc = Document()
+            doc.__dict__.update(document_dict)
+            res.append(doc)
         return res
