@@ -5,6 +5,7 @@ from urllib.parse import unquote
 
 from flask import request, Response
 
+
 # from usermanager.mongodb import user_collection
 # from usermanager.dao.user import (
 #     UserMongoDBDao
@@ -60,5 +61,13 @@ def handle_response(func: Callable):
     def _func():
         resp = func()
         return Response(json.dumps(resp), mimetype='application/json')
+
+    return _func
+
+
+def handle_download(func: Callable):
+    @wraps(func)
+    def _func():
+        return func()
 
     return _func

@@ -201,7 +201,43 @@
         })
       },
       downloadDocument: async function(document_id) {
-        // todo
+        const {
+          data: res
+        } = await this.$http({
+          method: 'get',
+          url: '/document/download',
+          // responseType:'blob',
+          headers: {
+            'Authorization': window.sessionStorage.getItem('token')
+          },
+          data: {
+            'document_id': document_id
+          }
+        })
+        console.log(res)
+        // let blob = new Blob([res], {
+        //   type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        // })
+        // let link = document.createElement('a')
+        // link.href = window.URL.createObjectURL(blob)
+        // link.style.display = 'none'
+        // link.click()
+        // window.URL.revokeObjectURL(link.href)
+        // if (res.meta.status === 200) {
+        //   this.$message.success(res.meta.msg)
+        //   // let blob = new Blob([res.data.file_buffer], {
+        //   //   type: 'application/msword'
+        //   // })
+        //   // let file_name = res.data.file_name
+        //   // let link = document.createElement('a')
+        //   // link.download = file_name
+        //   // link.href = window.URL.createObjectURL(blob)
+        //   // link.style.display = 'none'
+        //   // link.click()
+        //   // window.URL.revokeObjectURL(link.href)
+        // } else {
+        //   this.$message.error(res.meta.msg)
+        // }
       }
     }
   }

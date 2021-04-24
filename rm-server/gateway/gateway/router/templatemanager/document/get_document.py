@@ -6,10 +6,12 @@ from gateway.utils.handle_api import (
 )
 from gateway.http_client import templatemanager_http_client
 
+
 @app.route('/document/get_document', methods=['GET'])
 @handle_request_response
 @get_client_username
 def document_get(client_username: str):
+    body = request.json
     status_code, resp_body = templatemanager_http_client.get(
         'document/get_document', client_username, json=body
     )
