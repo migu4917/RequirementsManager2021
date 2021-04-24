@@ -82,7 +82,8 @@ class DocumentMongoDBDao(DocumentDao):
         )
         document = None
         if document_dict:
-            document = Document(**document_dict)
+            document = Document()
+            document.__dict__.update(document_dict)
         return document
 
     def get_all_document(self) -> List[Document]:

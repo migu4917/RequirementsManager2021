@@ -40,10 +40,10 @@
               <el-button type="info" size="small" icon="el-icon-info"></el-button>
             </el-tooltip>
             <el-tooltip effect="light" content="删除该文档" placement="top-start">
-              <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteDocument(scope.row.document_id)"></el-button>
+              <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteDocument(scope.row.id)"></el-button>
             </el-tooltip>
             <el-tooltip effect="light" content="下载该文档(word格式)" placement="top-start">
-              <el-button type="success" size="small" icon="el-icon-download" @click="downloadDocument(scope.row.document_id)"></el-button>
+              <el-button type="success" size="small" icon="el-icon-download" @click="downloadDocument(scope.row.id)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -167,6 +167,7 @@
         } else {
           this.$message.error(res.meta.msg)
         }
+        this.dialogVisible = false
       },
       deleteDocument: async function(document_id) {
         console.log(document_id);
@@ -185,7 +186,7 @@
                 'Authorization': window.sessionStorage.getItem('token')
               },
               data: {
-                'document_id': document_id
+                "document_id": document_id
               }
             })
             if (res.meta.status === 200) {
