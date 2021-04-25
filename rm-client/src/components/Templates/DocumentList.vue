@@ -37,7 +37,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-tooltip effect="light" content="查看/编辑该文档" placement="top-start">
-              <el-button type="info" size="small" icon="el-icon-info"></el-button>
+              <el-button type="info" size="small" icon="el-icon-info" @click='editDocument(scope.row.id)'></el-button>
             </el-tooltip>
             <el-tooltip effect="light" content="删除该文档" placement="top-start">
               <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteDocument(scope.row.id)"></el-button>
@@ -238,6 +238,12 @@
         // } else {
         //   this.$message.error(res.meta.msg)
         // }
+      },
+      editDocument: function(document_id) {
+        this.$router.push({
+          path: '/templates/documentEdit',
+          query: {'document_id': document_id}
+        })
       }
     }
   }

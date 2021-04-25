@@ -11,8 +11,8 @@ from gateway.http_client import templatemanager_http_client
 @handle_request_response
 @get_client_username
 def document_get(client_username: str):
-    body = request.json
+    args = request.args.to_dict()
     status_code, resp_body = templatemanager_http_client.get(
-        'document/get_document', client_username, json=body
+        'document/get_document', client_username, params=args
     )
     return status_code, resp_body

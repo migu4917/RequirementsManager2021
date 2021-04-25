@@ -67,18 +67,18 @@ class DocumentMongoDBDao(DocumentDao):
         self.collection.insert_one(document.jsonify())
 
     def delete_document(self, document_id: str):
-        self.collection.delete_one({"id": document_id})
+        self.collection.delete_one({'id': document_id})
 
     def edit_document(self, document_id: str, attributes: Dict):
-        new_values = {"$set": attributes}
+        new_values = {'$set': attributes}
         self.collection.update_one(
-            {"id": document_id},
+            {'id': document_id},
             new_values
         )
 
     def get_document(self, document_id: str) -> Document:
         document_dict = self.collection.find_one(
-            {"id": document_id}
+            {'id': document_id}
         )
         document = None
         if document_dict:

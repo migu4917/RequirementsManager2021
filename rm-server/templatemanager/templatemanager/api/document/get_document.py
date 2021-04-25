@@ -16,16 +16,14 @@ META_ERROR_NO_DOCUMENT = {'status': 404, 'msg': '获取失败，文档不存在�
 @app.route('/document/get_document', methods=['GET'])
 @handle_response
 def document_get():
-    body = request.json
-
-    document_id = body['document_id']
+    document_id = request.args.get('document_id')
 
     document_mongodb_dao = DocumentMongoDBDao(document_collection)
-
+    print('document id is ' + document_id)
     document = document_mongodb_dao.get_document(document_id)
 
-    if not document:
-        return {'meta': META_ERROR_NO_DOCUMENT}
+    # if not document:
+    #     return {'meta': META_ERROR_NO_DOCUMENT}
 
     return {
         'meta': META_SUCCESS,

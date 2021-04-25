@@ -54,12 +54,13 @@ const routes = [
       { path: '/requirements/importRequirementDoc', component: ImportRequirementDoc },
       {
         path: '/templates/templateList',
-        component: TemplateList,
-        children: [
-          { path: '/templates/documentEdit', component: DocumentEdit }
-        ]
+        component: TemplateList
       },
-      { path: '/templates/documentList', component: DocumentList }
+      {
+        path: '/templates/documentList',
+        component: DocumentList
+      },
+      { path: '/templates/documentEdit', component: DocumentEdit }
     ]
   }
 ]
