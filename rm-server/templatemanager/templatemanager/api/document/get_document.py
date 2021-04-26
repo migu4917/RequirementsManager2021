@@ -19,7 +19,7 @@ def document_get():
     document_id = request.args.get('document_id')
 
     document_mongodb_dao = DocumentMongoDBDao(document_collection)
-    print('document id is ' + document_id)
+    # print('document id is ' + document_id)
     document = document_mongodb_dao.get_document(document_id)
 
     # if not document:

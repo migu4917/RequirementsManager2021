@@ -82,7 +82,6 @@
 // ProjectHomePage.vue
   export default {
     created() {
-      this.document_id = this.$route.query.document_id
       this.getDocument()
     },
     data() {
@@ -102,12 +101,12 @@
     },
     methods: {
       getDocument: async function() {
-        if (this.document_id.length === 0) {
+        if (this.$route.query.document_id.length === 0) {
           return this.$message.error('错误！')
         }
-        let tempId = this.document_id
-        console.log(this.document_id)
-        console.log(tempId);
+        // let tempId = this.document_id
+        // console.log(this.document_id)
+        // console.log(tempId);
         const {
           data: res
         } = await this.$http({
@@ -122,10 +121,7 @@
         })
         if (res.meta.status === 200) {
           this.$message.success(res.meta.msg)
-          this.document = res.data
-          // this.newDocumentIntroduction = ''
-          // this.newDocumentTitle = ''
-          // this.getDocumentList()
+          this.document = res.data.document
         } else {
           this.$message.error(res.meta.msg)
         }
