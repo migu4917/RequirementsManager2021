@@ -86,9 +86,9 @@
     },
     data() {
       return {
-        document_id: '',
+        // document_id: '',
         document: {
-          id: '',
+          _id: '',
           document_name: '',
           template_name: '',
           introduction: '',
@@ -101,30 +101,32 @@
     },
     methods: {
       getDocument: async function() {
-        if (this.$route.query.document_id.length === 0) {
-          return this.$message.error('错误！')
-        }
-        // let tempId = this.document_id
-        // console.log(this.document_id)
-        // console.log(tempId);
-        const {
-          data: res
-        } = await this.$http({
-          method: 'get',
-          url: '/document/get_document',
-          headers: {
-            'Authorization': window.sessionStorage.getItem('token')
-          },
-          params: {
-            document_id: this.$route.query.document_id
-          }
-        })
-        if (res.meta.status === 200) {
-          this.$message.success(res.meta.msg)
-          this.document = res.data.document
-        } else {
-          this.$message.error(res.meta.msg)
-        }
+        this.document = this.$route.query.document
+        // // if (this.$route.query.document_id.length === 0) {
+        // //   return this.$message.error('错误！')
+        // // }
+        // console.log(this.$route.query.document_id);
+        // let tempId = this.$route.query.document_id
+        // // console.log(this.document_id)
+        // // console.log(tempId);
+        // const {
+        //   data: res
+        // } = await this.$http({
+        //   method: 'post',
+        //   url: '/document/profile',
+        //   headers: {
+        //     'Authorization': window.sessionStorage.getItem('token')
+        //   },
+        //   data: {
+        //     document_id: tempId
+        //   }
+        // })
+        // if (res.meta.status === 200) {
+        //   this.$message.success(res.meta.msg)
+        //   this.document = res.data.document
+        // } else {
+        //   this.$message.error(res.meta.msg)
+        // }
       }
     }
   }

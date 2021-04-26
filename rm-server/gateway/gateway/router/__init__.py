@@ -42,7 +42,7 @@ from gateway.router.templatemanager.document.create import document_create
 from gateway.router.templatemanager.document.delete import document_delete
 from gateway.router.templatemanager.document.edit import document_edit
 from gateway.router.templatemanager.document.download import document_download
-from gateway.router.templatemanager.document.get_document import document_get
+from gateway.router.templatemanager.document.profile import document_profile
 
 from gateway.router.templatemanager.document.comments.classify import comments_classsify
 from gateway.router.templatemanager.document.comments.wordcloud import comments_wordcloud

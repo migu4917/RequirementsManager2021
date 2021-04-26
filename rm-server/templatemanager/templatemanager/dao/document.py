@@ -10,35 +10,42 @@ from time import asctime, localtime
 
 @dataclass
 class Document:
-    def __init__(self, document_name: str = "", template_name: str = "", introduction: str = "", outline: list = []):
-        # typing declaration
-        self.id: str
-        self.document_name: str
-        self.template_name: str
-        self.introduction: str
-        self.last_time: str
-        self.contents: List[Tuple]
-        self.comments_file_list: List[str]
-        # assignment
-        self.id = generate_uuid()
-        self.document_name = document_name
-        self.template_name = template_name
-        self.introduction = introduction
-        self.last_time = asctime(localtime())
-        self.contents = []
-        for line in outline:
-            self.contents.append((line, ""))
-        self.comments_file_list = []
+    _id: str
+    document_name: str
+    template_name: str
+    introduction: str
+    last_time: str
+    contents: List[Tuple]
+    comments_file_list: List[str]
+    # def __init__(self, document_name: str = "", template_name: str = "", introduction: str = "", outline: list = []):
+    #     # typing declaration
+    #     self.id: str
+    #     self.document_name: str
+    #     self.template_name: str
+    #     self.introduction: str
+    #     self.last_time: str
+    #     self.contents: List[Tuple]
+    #     self.comments_file_list: List[str]
+    #     # assignment
+    #     self.id = generate_uuid()
+    #     self.document_name = document_name
+    #     self.template_name = template_name
+    #     self.introduction = introduction
+    #     self.last_time = asctime(localtime())
+    #     self.contents = []
+    #     for line in outline:
+    #         self.contents.append((line, ""))
+    #     self.comments_file_list = []
 
     def jsonify(self) -> Dict:
         return {
-            'id': self.id,
-            'document_name': self.document_name,
-            'template_name': self.template_name,
+            "_id": self._id,
+            "document_name": self.document_name,
+            "template_name": self.template_name,
             "introduction": self.introduction,
             "last_time": self.last_time,
-            'contents': self.contents,
-            'comments_file_list': self.comments_file_list,
+            "contents": self.contents,
+            "comments_file_list": self.comments_file_list
         }
 
 
@@ -67,30 +74,30 @@ class DocumentMongoDBDao(DocumentDao):
         self.collection.insert_one(document.jsonify())
 
     def delete_document(self, document_id: str):
-        self.collection.delete_one({'id': document_id})
+        self.collection.delete_one({'_id': document_id})
 
     def edit_document(self, document_id: str, attributes: Dict):
         new_values = {'$set': attributes}
         self.collection.update_one(
-            {'id': document_id},
+            {'_id': document_id},
             new_values
         )
 
     def get_document(self, document_id: str) -> Document:
         document_dict = self.collection.find_one(
-            {'id': document_id}
+            {'_id': document_id}
         )
         document = None
         if document_dict:
-            document = Document()
-            document.__dict__.update(document_dict)
+            document = Document(**document_dict)
+            # document.__dict__.update(document_dict)
         return document
 
     def get_all_document(self) -> List[Document]:
         document_list = self.collection.find()
         res = []
         for document_dict in document_list:
-            doc = Document()
-            doc.__dict__.update(document_dict)
+            doc = Document(**document_dict)
+            # doc.__dict__.update(document_dict)
             res.append(doc)
         return res

@@ -34,8 +34,15 @@ def document_create():
     if not template:
         return {'meta': META_ERROR_NO_TEMPLATE}
 
-    document = Document(document_name, template_name,
-                        introduction, template.outline)
+    # document = Document(document_name, template_name,
+    #                     introduction, template.outline)
+    document = Document(_id=generate_uuid(),
+                        document_name=document_name,
+                        template_name=template_name,
+                        introduction=introduction,
+                        last_time=asctime(localtime()),
+                        contents=[(line, "") for line in template.outline],
+                        comments_file_list=[])
     document_mongodb_dao = DocumentMongoDBDao(document_collection)
     document_mongodb_dao.create_document(document)
 

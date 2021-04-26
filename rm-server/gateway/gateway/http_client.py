@@ -28,6 +28,7 @@ class HttpClient:
             timeout=DEFAULT_TIMEOUT,
             **kwargs
         )
+        print(resp)
         return resp.status_code, resp.json()
 
     def post(self, endpoint: str, client_username: str = None, **kwargs):

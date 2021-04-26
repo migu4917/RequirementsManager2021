@@ -1,7 +1,7 @@
 import json
 from typing import Callable
 from functools import wraps
-
+import traceback
 from flask import request, Response
 
 from gateway.authtoken import token_storage
@@ -11,16 +11,20 @@ def handle_request_response(func: Callable):
 
     @wraps(func)
     def _func(*args, **kwargs):
-        print(request.headers)
-        print(request.data)
+        print("request.headers: \n" + str(request.headers))
+        print("request.data: \n" + str(request.data))
         status_code = None
         try:
             status_code, resp_body = func(*args, **kwargs)
         except Exception as e:
+            print("Error During Function Excution!!!!")
+            print('Exception is ---')
             print(e)
+            print(traceback.print_exc())
             resp_body = {'meta': {'status': 500, 'msg': 'Internal Server Error'}}
 
         if status_code and status_code != 200:
+            print("Error status_code {}".format(status_code))
             resp_body = {'meta': {'status': 500, 'msg': 'Internal Server Error'}}
         print(resp_body)
         return Response(json.dumps(resp_body), mimetype='application/json')
