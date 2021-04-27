@@ -37,19 +37,28 @@
       <el-tab-pane label="用户反馈管理和分析" name="1">
         <!-- 用户需求文件下拉列表 -->
         <!-- 选择一个用户需求 -->
-        <el-select v-model="comments_file_name" clearable filterable placeholder="请选择一个用户需求数据集">
-          <el-option
-           v-for="comments in document.comments_file_list"
-           :key="comments"
-           :label="comments"
-           :value="comments">
-          </el-option>
-        </el-select>
-        <!-- 用户需求分类按钮 -->
-        <el-button type="primary" round>用户需求进行分类</el-button>
-        <!-- 用户需求词云按钮 -->
-        <el-button type="info" round>生成词云</el-button>
-        <!-- 用户需求分类表格 -->
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-select v-model="comments_file_name" clearable filterable placeholder="请选择一个用户需求数据集">
+              <el-option
+               v-for="comments in document.comments_file_list"
+               :key="comments"
+               :label="comments"
+               :value="comments">
+              </el-option>
+            </el-select>
+          </el-col>
+          <!-- 用户需求分类按钮 -->
+          <el-col :span="8">
+            <el-button type="primary" round>用户需求进行分类</el-button>
+          </el-col>
+          <!-- 用户需求词云按钮 -->
+          <el-col :span="8">
+            <el-button type="info" round>生成词云</el-button>
+          </el-col>
+          <!-- 用户需求分类表格 -->
+
+        </el-row>
       </el-tab-pane>
     </el-tabs>
     <!-- test -->
@@ -82,11 +91,12 @@
 // ProjectHomePage.vue
   export default {
     created() {
+      this.document_id = this.$route.query.document_id
       this.getDocument()
     },
     data() {
       return {
-        // document_id: '',
+        document_id: '',
         document: {
           _id: '',
           document_name: '',
@@ -101,32 +111,29 @@
     },
     methods: {
       getDocument: async function() {
-        this.document = this.$route.query.document
-        // // if (this.$route.query.document_id.length === 0) {
-        // //   return this.$message.error('错误！')
-        // // }
+        if (this.document_id.length === 0) {
+          return this.$message.error('错误！')
+        }
         // console.log(this.$route.query.document_id);
-        // let tempId = this.$route.query.document_id
-        // // console.log(this.document_id)
-        // // console.log(tempId);
-        // const {
-        //   data: res
-        // } = await this.$http({
-        //   method: 'post',
-        //   url: '/document/profile',
-        //   headers: {
-        //     'Authorization': window.sessionStorage.getItem('token')
-        //   },
-        //   data: {
-        //     document_id: tempId
-        //   }
-        // })
-        // if (res.meta.status === 200) {
-        //   this.$message.success(res.meta.msg)
-        //   this.document = res.data.document
-        // } else {
-        //   this.$message.error(res.meta.msg)
-        // }
+        // console.log(this.document_id)
+        const {
+          data: res
+        } = await this.$http({
+          method: 'get',
+          url: '/document/profile',
+          headers: {
+            'Authorization': window.sessionStorage.getItem('token')
+          },
+          params: {
+            document_id: this.document_id
+          }
+        })
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          this.document = res.data.document
+        } else {
+          this.$message.error(res.meta.msg)
+        }
       }
     }
   }

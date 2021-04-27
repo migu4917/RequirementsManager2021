@@ -7,12 +7,12 @@ from gateway.utils.handle_api import (
 from gateway.http_client import templatemanager_http_client
 
 
-@app.route('/document/profile', methods=['POST'])
+@app.route('/document/profile', methods=['GET'])
 @handle_request_response
 @get_client_username
 def document_profile(client_username: str):
-    body = request.json
-    status_code, resp_body = templatemanager_http_client.post(
-        'document/profile', client_username, json=body
+    args = request.args.to_dict()
+    status_code, resp_body = templatemanager_http_client.get(
+        'document/profile', client_username, params=args
     )
     return status_code, resp_body

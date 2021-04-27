@@ -23,7 +23,7 @@ def document_edit():
     document = Document(**body)
     document.last_time = asctime(localtime())
 
-    document_id = document.id
+    document_id = document._id
 
     document_mongodb_dao = DocumentMongoDBDao(document_collection)
 

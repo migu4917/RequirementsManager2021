@@ -1,0 +1,1 @@
+from templatemanager.api.document.profile import document_profile
