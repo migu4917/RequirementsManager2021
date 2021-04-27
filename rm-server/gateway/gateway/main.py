@@ -1,5 +1,5 @@
 import sys, os
-sys.path.append(os.getcwd() + "/gateway")
+# sys.path.append(os.getcwd() + "/gateway")
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
