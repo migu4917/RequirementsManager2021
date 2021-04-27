@@ -7,10 +7,10 @@ import subprocess
 import os
 from threading import Thread
 
-import gateway.main
-import usermanager.main
-import projectmanager.main
-import requirementmanager.main
+# import gateway.main
+# import usermanager.main
+# import projectmanager.main
+# import requirementmanager.main
 
 serverCmds = [
     "python gateway/gateway/main.py flask",

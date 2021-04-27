@@ -1,5 +1,5 @@
-import sys
-
+import sys, os
+sys.path.append(os.getcwd() + "/usermanager")
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
