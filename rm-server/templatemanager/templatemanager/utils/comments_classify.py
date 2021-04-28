@@ -4,6 +4,7 @@ import pandas as pd
 from gensim.models import KeyedVectors
 import time
 from sklearn.neural_network import MLPClassifier
+from typing import List
 
 _tencent_file = '../tecent_ailab_word2vec/Tencent_AILab_ChineseEmbedding_2M.twv'
 _wv_from_text = None
@@ -56,5 +57,11 @@ def mlp_pred(x_test):
             _model = pickle.load(f)
     return _model.predict(x_test)
 
-def comments_classsify():
+
+def result2list(df: pd.DataFrame) -> List:
     pass
+
+
+def comments_classsify(file):
+    df = pd.DataFrame(file)
+    return df
