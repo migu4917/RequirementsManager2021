@@ -50,7 +50,7 @@ def document_download():
     #                attachment_filename=quote(document.document_name + '.docx'))
     return {
         'meta': META_SUCCESS,
-        'fileBase64': base64.urlsafe_b64encode(docx_file)
+        'fileBase64': base64.urlsafe_b64encode(docx_file.getvalue())
     }
     # response_info = {
     #     'meta': META_SUCCESS,
@@ -60,3 +60,13 @@ def document_download():
     #     }
     # }
     # return response_info
+
+
+if __name__ == '__main__':
+    word_docx = docx.Document()
+    word_docx.add_heading("test", 1)
+
+    # save the file to a file stream
+    docx_file = io.BytesIO()
+    word_docx.save(docx_file)
+    print(base64.urlsafe_b64encode(docx_file.getvalue()))
