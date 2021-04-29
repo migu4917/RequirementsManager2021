@@ -6,6 +6,7 @@ from multiprocessing import Process
 import subprocess
 import os
 from threading import Thread
+import platform
 
 # import gateway.main
 # import usermanager.main
@@ -20,14 +21,29 @@ serverCmds = [
     "python templatemanager/templatemanager/main.py flask",
 ]
 
+serverCmdsMac = [
+    "python3 gateway/gateway/main.py flask",
+    "python3 usermanager/usermanager/main.py flask",
+    #"python3 projectmanager/projectmanager/main.py flask",
+    #"python3 requirementmanager/requirementmanager/main.py flask",
+    "python3 templatemanager/templatemanager/main.py flask",
+]
+
 # def startServe(cmd):
 #     # os.system(cmd)
 #     subprocess.run(args=cmd, shell=True, encoding="utf-8")
 
 if __name__ == "__main__":
-    for cmd in serverCmds:
-        os.system("cmd.exe /c start cmd.exe /c\"" + cmd + "\"")
-    pass
+    if platform.system() == "Windows":
+        for cmd in serverCmds:
+            os.system("cmd.exe /c start cmd.exe /c\"" + cmd + "\"")
+    elif platform.system() == "Darwin":
+        print("mac os")
+        # for cmd in serverCmdsMac:
+            # osascript -e 'tell app "Terminal" to do script "echo hello"'
+            # os.system("osascript -e 'tell app \"Terminal\" to do script \"" + cmd + "\"'")
+    else:
+        print("no match platform")
 
 # #!/usr/bin/env python
 # """Continuation-passing style (CPS) script.
