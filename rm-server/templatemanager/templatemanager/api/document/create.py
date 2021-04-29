@@ -41,7 +41,8 @@ def document_create():
                         template_name=template_name,
                         introduction=introduction,
                         last_time=asctime(localtime()),
-                        contents=[(line, "") for line in template.outline],
+                        outline=[line for line in template.outline],
+                        contents=["" for _ in template.outline],
                         comments_file_list=[])
     document_mongodb_dao = DocumentMongoDBDao(document_collection)
     document_mongodb_dao.create_document(document)

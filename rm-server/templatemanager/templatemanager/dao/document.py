@@ -15,8 +15,10 @@ class Document:
     template_name: str
     introduction: str
     last_time: str
-    contents: List[Tuple]
+    outline: List
+    contents: List
     comments_file_list: List[str]
+
     # def __init__(self, document_name: str = "", template_name: str = "", introduction: str = "", outline: list = []):
     #     # typing declaration
     #     self.id: str
@@ -44,6 +46,7 @@ class Document:
             "template_name": self.template_name,
             "introduction": self.introduction,
             "last_time": self.last_time,
+            "outline": self.outline,
             "contents": self.contents,
             "comments_file_list": self.comments_file_list
         }

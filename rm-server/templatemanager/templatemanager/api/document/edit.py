@@ -19,8 +19,9 @@ META_ERROR_NO_DOCUMENT = {'status': 404, 'msg': '修改失败，该文档不存�
 @handle_response
 def document_edit():
     body = request.json
-
-    document = Document(**body)
+    document_dict = body['document']
+    document = Document(**document_dict)
+    # update the time
     document.last_time = asctime(localtime())
 
     document_id = document._id

@@ -29,7 +29,7 @@
             </el-form-item>
             <el-form-item label="文档简介">
               <el-col :span="11">
-                <el-input type="textarea" v-model="chosenDocument.introduction"></el-input>
+                <el-input type="textarea" v-model="chosenDocument.introduction" autosize></el-input>
               </el-col>
             </el-form-item>
             <el-form-item label="最后修改时间">
@@ -38,6 +38,8 @@
               </el-col>
             </el-form-item>
             <el-form-item label="用户需求数据集列表">
+              <div v-if="chosenDocument.comments_file_list.length <= 0">暂无数据</div>
+              <el-tag v-for="(fileName, i) in chosenDocument.comments_file_list" :key="(fileName, i)" closable @close="deleteCommentsFile(fileName, i)">{{fileName}}</el-tag>
               <!-- <el-col :span="11">
                 <template>
                   <el-table :data="chosenDocument.comments_file_list"
@@ -54,47 +56,54 @@
               </el-col> -->
             </el-form-item>
             <el-form-item>
-              <!-- <template>
-              <el-popconfirm title="确定修改吗？(该操作不可逆)"> -->
               <el-button type="primary" @click="editDocument()">提交更改</el-button>
-              <!-- </el-popconfirm>
-              </template> -->
             </el-form-item>
           </el-form>
-          <!-- 左边栏为信息目录 -->
-          <!-- <el-row :gutter="20" style="margin-bottom: 20px;">
-            <el-col :span="6">
-            </el-col>
-          </el-row> -->
-          <!-- 右边栏为相关信息 -->
         </el-tab-pane>
         <!-- 文档内容编辑 -->
-        <el-tab-pane label="文档内容编辑" name="1">
-          <!-- test -->
+        <el-tab-pane label="文档内容编辑" name="1" v-loading="loadingTag">
           <el-row :gutter="20" style="margin-bottom: 20px;">
             <el-col :span="6">
-              <div><span style="color: ghostwhite;">目录</span></div>
+              <div><span style="color: black;">目录</span></div>
             </el-col>
-            <el-col :span="18">
-              <!-- 添加需求按钮 -->
-              <!-- <el-dropdown trigger="click" size="medium" @command="handleAddRequirement"> -->
-                <!-- <el-button type="primary" icon="el-icon-plus" plain round>添加</el-button> -->
-                <!-- <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="addBefore">在上方插入</el-dropdown-item>
-                  <el-dropdown-item command="addAfter">在下方插入</el-dropdown-item>
-                  <el-dropdown-item command="addInner">添加子需求</el-dropdown-item>
-                  <el-dropdown-item command="importFile" divided>从文本导入</el-dropdown-item>
-                </el-dropdown-menu> -->
-              <!-- </el-dropdown> -->
+            <el-col :span="18"></el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <!-- 文档目录区 -->
+            <el-col :span="6">
+              <el-tag :key="(line, i)" v-for="(line, i) in chosenDocument.outline" closable
+               @click="outlintIndex = i" effect="plain" @close="deleteOutline(line, i)">
+              {{ line }}
+              </el-tag>
             </el-col>
+            <el-col :span="10">
+              <el-form label-width="auto" v-if="outlintIndex >= 0">
+                <el-form-item label="大纲">
+                  <el-input v-model="chosenDocument.outline[outlintIndex]"></el-input>
+                </el-form-item>
+                <el-form-item label="内容">
+                  <el-input v-model="chosenDocument.contents[outlintIndex]" type="textarea" :autosize="{minRows: 5,maxRows: 10}"></el-input>
+                </el-form-item>
+                <el-form-item label="">
+                  <el-button type="primary" @click="editDocument()">提交更改</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <!-- 需求表格区 -->
+            <!-- <el-col :span="18"> -->
+              <!-- 加key是为了刷新子页面 -->
+              <!-- https://segmentfault.com/q/1010000015992883 -->
+              <!-- https://blog.csdn.net/u010176097/article/details/81252417 -->
+              <!-- <router-view :key="$route.fullPath" @fresh="fresh"></router-view> -->
+            <!-- </el-col> -->
           </el-row>
         </el-tab-pane>
-        <!-- 用户需求区域 -->
-        <el-tab-pane label="用户反馈管理和分析" name="2">
+        <!-- 用户需求分析区域 -->
+        <el-tab-pane label="用户反馈管理和分析" name="2" v-loading="loadingTag">
           <!-- 用户需求文件下拉列表 -->
           <!-- 选择一个用户需求 -->
           <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="6">
               <el-select v-model="comments_file_name" clearable filterable placeholder="请选择一个用户需求数据集">
                 <el-option
                  v-for="comments in chosenDocument.comments_file_list"
@@ -106,14 +115,17 @@
             </el-col>
             <!-- 用户需求分类按钮 -->
             <el-col :span="4">
-              <el-button type="primary" round>用户需求进行分类</el-button>
+              <el-button type="warning" round @click="uploadCommentsFile()">用户需求上传</el-button>
+            </el-col>
+            <el-col :span="4">
+              <el-button type="primary" round @click="doClassification()">用户需求分类</el-button>
             </el-col>
             <!-- 用户需求词云按钮 -->
             <el-col :span="4">
-              <el-button type="info" round>生成词云</el-button>
+              <el-button type="info" round @click="getWordCloud()">生成词云</el-button>
             </el-col>
             <!-- 用户需求分类表格 -->
-
+            <el-table></el-table>
           </el-row>
         </el-tab-pane>
       </el-tabs>
@@ -139,10 +151,13 @@
           template_name: '',
           introduction: '',
           last_time: "",
+          outline: [],
           contents: [],
           comments_file_list: []
         },
         comments_file_name: '',
+        // show outline and content
+        outlintIndex: -1
       }
     },
     methods: {
@@ -172,8 +187,9 @@
           this.$message.error(res.meta.msg)
         }
         this.loadingTag = false
+        this.outlintIndex = -1
       },
-      editDocument: async function() {
+      editDocument: function() {
         this.$messageBox('确认提交该模板？(该操作不可逆)', {
           type: 'warning'
         }).then(async () => {
@@ -186,7 +202,7 @@
               'Authorization': window.sessionStorage.getItem('token')
             },
             data: {
-              document: chosenDocument
+              document: this.chosenDocument
             }
           })
           if (res.meta.status === 200) {
@@ -195,12 +211,60 @@
           } else {
             this.$message.error(res.meta.msg)
           }
+        }).catch(() => {
+          this.$message.info('已取消删除')
         })
-        .catch(() => {})
       },
       // 删除表格某一行
       deleteRow: function(index, rows) {
         rows.splice(index, 1);
+      },
+      deleteOutline: function(line, index) {
+        this.$messageBox('确认删除\"' + line + '\"', {
+          type: 'warning'
+        }).then(async () => {
+          this.chosenDocument.outline.splice(index, 1)
+          this.chosenDocument.contents.splice(index, 1)
+          const {
+            data: res
+          } = await this.$http({
+            method: "post",
+            url: "/document/edit",
+            headers: {
+              'Authorization': window.sessionStorage.getItem('token')
+            },
+            data: {
+              document: this.chosenDocument
+            }
+          })
+          if (res.meta.status === 200) {
+            this.$message.success(res.meta.msg)
+            this.getDocument()
+          } else {
+            this.$message.error(res.meta.msg)
+          }
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+      deleteCommentsFile: function(fileName, index) {
+        this.$messageBox('确认删除\"' + fileName + '\"', {
+          type: 'warning'
+        }).then(async () => {
+          this.chosenDocument.comments_file_list.splice(index, 1)
+          this.editDocument()
+        }).catch(() => {
+          this.$message.info('已取消')
+        })
+      },
+      uploadCommentsFile: async function() {
+
+      },
+      getWordCloud: async function() {
+
+      },
+      doClassification: async function() {
+
       }
     }
   }
