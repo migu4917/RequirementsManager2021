@@ -40,20 +40,6 @@
             <el-form-item label="用户需求数据集列表">
               <div v-if="chosenDocument.comments_file_list.length <= 0">暂无数据</div>
               <el-tag v-for="(fileName, i) in chosenDocument.comments_file_list" :key="(fileName, i)" closable @close="deleteCommentsFile(fileName, i)">{{fileName}}</el-tag>
-              <!-- <el-col :span="11">
-                <template>
-                  <el-table :data="chosenDocument.comments_file_list"
-                    max-height="400">
-                    <el-table-column></el-table-column>
-                    <el-table-column fixed="right">
-                      <el-button @click.native.prevent="deleteRow(scope.$index, tableData)"
-                        type="text" size="small">
-                        移除
-                      </el-button>
-                    </el-table-column>
-                  </el-table>
-                </template>
-              </el-col> -->
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="editDocument()">提交更改</el-button>
@@ -113,16 +99,21 @@
                 </el-option>
               </el-select>
             </el-col>
-            <!-- 用户需求分类按钮 -->
-            <el-col :span="4">
-              <el-button type="warning" round @click="uploadCommentsFile()">用户需求上传</el-button>
+            <!-- 用户需求上传按钮 -->
+            <el-col :span="5">
+              <el-upload :limit="1" :auto-upload="false" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-button type="success" style="margin-left: 10px;" size="small" @click="uploadCommentsFile()">用户需求上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传csv文件，且不超过500kb</div>
+              </el-upload>
             </el-col>
-            <el-col :span="4">
-              <el-button type="primary" round @click="doClassification()">用户需求分类</el-button>
+            <!-- 用户需求分类 -->
+            <el-col :span="3">
+              <el-button type="primary" size="small" @click="doClassification()">用户需求分类</el-button>
             </el-col>
             <!-- 用户需求词云按钮 -->
-            <el-col :span="4">
-              <el-button type="info" round @click="getWordCloud()">生成词云</el-button>
+            <el-col :span="3">
+              <el-button type="info" size="small" @click="getWordCloud()">生成词云</el-button>
             </el-col>
             <!-- 用户需求分类表格 -->
             <el-table></el-table>
@@ -155,9 +146,12 @@
           contents: [],
           comments_file_list: []
         },
-        comments_file_name: '',
         // show outline and content
-        outlintIndex: -1
+        outlintIndex: -1,
+        // comments chose
+        comments_file_name: '',
+        // comments upload
+        commentsFile: null
       }
     },
     methods: {
@@ -166,8 +160,6 @@
           return this.$message.error('错误！')
         }
         this.loadingTag = true
-        // console.log(this.$route.query.document_id);
-        // console.log(this.document_id)
         const {
           data: res
         } = await this.$http({
@@ -257,8 +249,33 @@
           this.$message.info('已取消')
         })
       },
+      addCommentsFile: function(file) {
+        this.commentsFile = file.file
+      },
       uploadCommentsFile: async function() {
-
+        if (!this.commentsFile) {
+          return this.$message.error('请选择文件！')
+        }
+        let formData = new FormData()
+        formData.append('document_id', this.document_id)
+        formData.append('file', this.commentsFile)
+        const {
+          data: res
+        } = await this.$http({
+          method: 'put',
+          url: 'document/comments/upload',
+          headers: {
+            'Authorization': window.sessionStorage.getItem('token'),
+            'Content-type': 'multipart/form-data'
+          },
+          data: formData
+        })
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          this.getDocument()
+        } else {
+          this.$message.error(res.meta.msg)
+        }
       },
       getWordCloud: async function() {
 
