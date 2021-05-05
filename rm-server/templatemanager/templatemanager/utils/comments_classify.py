@@ -144,7 +144,7 @@ def _result2list(comments: pd.Series, y_pred: np.ndarray) -> Dict:
 def classify_comments(file):
     df = pd.read_csv(file, encoding='utf-8')
     if 'class' in df.columns:
-        df = df[lambda x: x['class'] != 'best']
+        df = df[lambda x: x['class'] != 'best'].reset_index(drop=True)
     # print(df.shape)
     # print(df.head())
 

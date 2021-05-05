@@ -41,7 +41,7 @@
               <div v-if="chosenDocument.comments_file_list.length <= 0">暂无数据</div>
               <el-tag v-for="(fileName, i) in chosenDocument.comments_file_list" :key="(fileName, i)" closable @close="deleteCommentsFile(fileName, i)">{{fileName}}</el-tag>
             </el-form-item>
-            <el-form-item>
+            <el-form-item label="">
               <el-button type="primary" @click="editDocument()">提交更改</el-button>
             </el-form-item>
           </el-form>
