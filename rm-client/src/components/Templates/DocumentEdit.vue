@@ -15,7 +15,7 @@
       <!-- v-model="" -->
       <el-tabs tab-position="top" style="overflow: auto;">
         <!-- 文档基本信息编辑区域 -->
-        <el-tab-pane label="需求文档基本信息编辑" name="0" v-loading="loadingTag">
+        <el-tab-pane label="需求文档基本信息编辑" name="0" v-loading="loadingTag.info">
           <el-form v-bind:model="chosenDocument" label-width="auto">
             <el-form-item label="文档名称">
               <el-col :span="11">
@@ -47,7 +47,7 @@
           </el-form>
         </el-tab-pane>
         <!-- 文档内容编辑 -->
-        <el-tab-pane label="文档内容编辑" name="1" v-loading="loadingTag">
+        <el-tab-pane label="文档内容编辑" name="1" v-loading="loadingTag.info">
           <el-row :gutter="20" style="margin-bottom: 20px;">
             <el-col :span="6">
               <div><span style="color: black;">目录</span></div>
@@ -85,7 +85,7 @@
           </el-row>
         </el-tab-pane>
         <!-- 用户需求分析区域 -->
-        <el-tab-pane label="用户反馈管理和分析" name="2" v-loading="loadingTag">
+        <el-tab-pane label="用户反馈管理和分析" name="2" v-loading="loadingTag.info">
           <!-- 用户需求文件下拉列表 -->
           <!-- 选择一个用户需求 -->
           <el-row :gutter="20">
@@ -101,9 +101,9 @@
             </el-col>
             <!-- 用户需求上传按钮 -->
             <el-col :span="5">
-              <el-upload :limit="1" :auto-upload="false" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
+              <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
                 <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                <el-button type="success" style="margin-left: 10px;" size="small" @click="uploadCommentsFile()">用户需求上传</el-button>
+                <el-button type="success" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">用户需求上传</el-button>
                 <div slot="tip" class="el-upload__tip">只能上传csv文件，且不超过500kb</div>
               </el-upload>
             </el-col>
@@ -115,8 +115,27 @@
             <el-col :span="3">
               <el-button type="info" size="small" @click="getWordCloud()">生成词云</el-button>
             </el-col>
-            <!-- 用户需求分类表格 -->
-            <el-table></el-table>
+          </el-row>
+          <el-row :gutter="20" style="margin-bottom: 20px;">
+            <!-- 词云 -->
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                <span style="color: black;">用户需求词云{{': ' + this.comments_file_name}}</span>
+              </div>
+              <div v-if="this.wordcloud_img.length > 0">
+                <el-tooltip effect="dark" :content="'所属数据集为：'+this.comments_file_name" placement="top-start">
+                  <el-image :src="this.wordcloud_img"></el-image>
+                </el-tooltip>
+              </div>
+            </el-card>
+            <!-- 用户需求分类 -->
+            <el-card class="box-card" shadow="hover" v-loading='loadingTag.classify'>
+              <div slot="header">
+                <span style="color: black;">用户需求分类结果</span>
+              </div>
+              <!-- 表格 -->
+              <el-table></el-table>
+            </el-card>
           </el-row>
         </el-tab-pane>
       </el-tabs>
@@ -134,7 +153,10 @@
     data() {
       return {
         // loading tag
-        loadingTag: false,
+        loadingTag: {
+          info: false,
+          classify: false
+        },
         document_id: '',
         chosenDocument: {
           _id: '',
@@ -151,7 +173,9 @@
         // comments chose
         comments_file_name: '',
         // comments upload
-        commentsFile: null
+        commentsFile: null,
+        // wordcloud image base64
+        wordcloud_img: ''
       }
     },
     methods: {
@@ -159,7 +183,7 @@
         if (this.document_id.length === 0) {
           return this.$message.error('错误！')
         }
-        this.loadingTag = true
+        this.loadingTag.info = true
         const {
           data: res
         } = await this.$http({
@@ -178,8 +202,12 @@
         } else {
           this.$message.error(res.meta.msg)
         }
-        this.loadingTag = false
+        this.loadingTag.info = false
+        // clear attributes
         this.outlintIndex = -1
+        this.comments_file_name = ''
+        this.commentsFile = null
+        this.wordcloud_img = ''
       },
       editDocument: function() {
         this.$messageBox('确认提交该模板？(该操作不可逆)', {
@@ -252,7 +280,7 @@
       addCommentsFile: function(file) {
         this.commentsFile = file.file
       },
-      uploadCommentsFile: async function() {
+      submitCommentsFile: async function() {
         if (!this.commentsFile) {
           return this.$message.error('请选择文件！')
         }
@@ -262,7 +290,7 @@
         const {
           data: res
         } = await this.$http({
-          method: 'put',
+          method: 'post',
           url: 'document/comments/upload',
           headers: {
             'Authorization': window.sessionStorage.getItem('token'),
@@ -278,14 +306,66 @@
         }
       },
       getWordCloud: async function() {
-
+        if (this.comments_file_name.length == 0) {
+          return this.$message.error('请选择用户需求数据集！')
+        }
+        const {
+          data : res
+        } = await this.$http({
+          method: 'get',
+          url: 'document/comments/wordcloud',
+          headers: {
+            'Authorization': window.sessionStorage.getItem('token')
+          },
+          params: {
+            document_id: this.document_id,
+            comments_file_name: this.comments_file_name
+          }
+        })
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          // process the base64 img
+          let img_base64_str = res.data.img_base64
+          // console.log(img_base64_str);
+          // data:image/png;base64,
+          this.wordcloud_img = 'data:image/png;base64,' + img_base64_str
+        } else {
+          this.$message.error(res.meta.msg)
+        }
       },
       doClassification: async function() {
-
+        if (this.comments_file_name.length == 0) {
+          return this.$message.error('请选择用户需求数据集！')
+        }
+        this.loadingTag.classify = true
+        const {
+          data : res
+        } = await this.$http({
+          method: 'post',
+          url: 'document/comments/classify',
+          headers: {
+            'Authorization': window.sessionStorage.getItem('token')
+          },
+          data: {
+            document_id: this.document_id,
+            comments_file_name: this.comments_file_name
+          }
+        })
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          // let img_base64_str = res.data.img_base64
+          console.log(res.data.classify_result);
+        } else {
+          this.$message.error(res.meta.msg)
+        }
+        this.loadingTag.classify = false
       }
     }
   }
 </script>
 
 <style lang="less" scoped>
+  .box-card {
+     margin-top: 20px;
+  }
 </style>

@@ -11,7 +11,8 @@ from gateway.http_client import templatemanager_http_client
 @handle_download
 @get_client_username
 def document_download(client_username: str):
-    body = request.json
-    return templatemanager_http_client.get(
-        'document/download', client_username, json=body
+    args = request.args.to_dict()
+    status_code, resp_body = templatemanager_http_client.get(
+        'document/download', client_username, params=args
     )
+    return status_code, resp_body

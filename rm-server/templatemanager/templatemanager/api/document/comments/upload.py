@@ -12,14 +12,14 @@ from templatemanager.utils.handle_api import handle_response
 
 META_SUCCESS = {'status': 200, 'msg': '创建成功！'}
 META_ERROR_BAD_FILE = {'status': 400, 'msg': '上传失败，文件格式错误！'}
-META_ERROR = {'status': 404, 'msg': '失败，未找到所属文档！'}
+META_ERROR = {'status': 405, 'msg': '失败，未找到所属文档！'}
 
 
-@app.route('/document/comments/upload', methods=['PUT'])
+@app.route('/document/comments/upload', methods=['POST'])
 @handle_response
 def comments_upload():
     # body = request.json
-    document_id = request.files['document_id']
+    document_id = request.form['document_id']
     upload_file = request.files['file']
     if not upload_file.filename.endswith('.csv'):
         return {'meta': META_ERROR_BAD_FILE}
