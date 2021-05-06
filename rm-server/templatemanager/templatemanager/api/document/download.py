@@ -24,9 +24,9 @@ META_ERROR_NO_FILE = {'status': 404, 'msg': '下载失败，文档不存在！'}
 @app.route('/document/download', methods=['GET'])
 @handle_download
 def document_download():
-    body = request.json
+    # body = request.json
 
-    document_id = body['document_id']
+    document_id = request.args.get('document_id')
 
     document_mongodb_dao = DocumentMongoDBDao(document_collection)
 
@@ -50,7 +50,9 @@ def document_download():
     #                attachment_filename=quote(document.document_name + '.docx'))
     return {
         'meta': META_SUCCESS,
-        'fileBase64': base64.urlsafe_b64encode(docx_file.getvalue())
+        'data': {
+            'file_base64': base64.b64encode(docx_file.getvalue()).decode('utf-8')
+        }
     }
     # response_info = {
     #     'meta': META_SUCCESS,
@@ -69,4 +71,4 @@ if __name__ == '__main__':
     # save the file to a file stream
     docx_file = io.BytesIO()
     word_docx.save(docx_file)
-    print(base64.urlsafe_b64encode(docx_file.getvalue()))
+    print(base64.b64encode(docx_file.getvalue()))

@@ -186,7 +186,7 @@
                 'Authorization': window.sessionStorage.getItem('token')
               },
               data: {
-                "document_id": document_id
+                document_id: this.document_id
               }
             })
             if (res.meta.status === 200) {
@@ -206,15 +206,39 @@
         } = await this.$http({
           method: 'get',
           url: '/document/download',
-          // responseType:'blob',
           headers: {
             'Authorization': window.sessionStorage.getItem('token')
           },
-          data: {
+          params: {
             'document_id': document_id
           }
         })
-        console.log(res)
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          // handle base64
+          let base64_str = res.data.file_base64
+          const docxUrl = 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,' + base64_str
+          // 如果浏览器支持msSaveOrOpenBlob方法（也就是使用IE浏览器的时候），那么调用该方法去下载图片
+          if (window.navigator.msSaveOrOpenBlob) {
+            var bstr = atob(docxUrl.split(',')[1])
+            var n = bstr.length
+            var u8arr = new Uint8Array(n)
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n)
+            }
+            var blob = new Blob([u8arr])
+            window.navigator.msSaveOrOpenBlob(blob, 'chart-download' + '.' + 'docx')
+          } else {
+            // 这里就按照chrome等新版浏览器来处理
+            const a = document.createElement('a')
+            a.href = docxUrl
+            a.setAttribute('download', 'chart-download')
+            a.click()
+          }
+        } else {
+          this.$message.error(res.meta.msg)
+        }
+        // console.log(res)
         // let blob = new Blob([res], {
         //   type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         // })
