@@ -6,7 +6,7 @@ import time
 from sklearn.neural_network import MLPClassifier
 from typing import List, Dict
 
-from preprocess import filter_stop_words, jieba_cut_comment
+from templatemanager.utils.preprocess import filter_stop_words, jieba_cut_comment
 
 label_table = {'additional_cost': 0,            # 额外开销  性能1
                'functional_complaint': 1,       # 功能问题  功能0

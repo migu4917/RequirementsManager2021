@@ -6,7 +6,7 @@ import requests
 from gateway.config import USER_MANAGER_URL
 
 
-DEFAULT_TIMEOUT = 60
+DEFAULT_TIMEOUT = 60 * 2
 
 
 class HttpClient:

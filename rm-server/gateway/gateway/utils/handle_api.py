@@ -32,15 +32,15 @@ def handle_request_response(func: Callable):
     return _func
 
 
-def handle_download(func: Callable):
-    @wraps(func)
-    def _func(*args, **kwargs):
-        print(request.headers)
-        print(request.data)
+# def handle_download(func: Callable):
+#     @wraps(func)
+#     def _func(*args, **kwargs):
+#         print(request.headers)
+#         print(request.data)
 
-        return Response(func(*args, **kwargs), mimetype='application/msword')
+#         return Response(func(*args, **kwargs), mimetype='application/msword')
     
-    return _func
+#     return _func
 
 
 def get_client_username(func: Callable):

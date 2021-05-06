@@ -6,7 +6,7 @@ import platform
 import base64
 from typing import List
 
-from preprocess import filter_stop_words, jieba_cut_comment
+from templatemanager.utils.preprocess import filter_stop_words, jieba_cut_comment
 
 # 黑体
 _macos_font_path = '/System/Library/Fonts/STHeiti Medium.ttc'

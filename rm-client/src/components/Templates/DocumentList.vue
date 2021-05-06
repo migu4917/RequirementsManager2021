@@ -43,7 +43,7 @@
               <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteDocument(scope.row._id)"></el-button>
             </el-tooltip>
             <el-tooltip effect="light" content="下载该文档(word格式)" placement="top-start">
-              <el-button type="success" size="small" icon="el-icon-download" @click="downloadDocument(scope.row._id)"></el-button>
+              <el-button type="success" size="small" icon="el-icon-download" @click="downloadDocument(scope.row._id, scope.row.document_name)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -200,7 +200,7 @@
           this.$message.info('已取消删除')
         })
       },
-      downloadDocument: async function(document_id) {
+      downloadDocument: async function(document_id, document_name) {
         const {
           data: res
         } = await this.$http({
@@ -218,6 +218,7 @@
           this.$message.success(res.meta.msg)
           // handle base64
           let base64_str = res.data.file_base64
+          // data:application/msword;base64,
           const docxUrl = 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,' + base64_str
           // 如果浏览器支持msSaveOrOpenBlob方法（也就是使用IE浏览器的时候），那么调用该方法去下载图片
           if (window.navigator.msSaveOrOpenBlob) {
@@ -228,12 +229,12 @@
               u8arr[n] = bstr.charCodeAt(n)
             }
             var blob = new Blob([u8arr])
-            window.navigator.msSaveOrOpenBlob(blob, 'chart-download' + '.' + 'docx')
+            window.navigator.msSaveOrOpenBlob(blob, document_name + '.' + 'docx')
           } else {
             // 这里就按照chrome等新版浏览器来处理
             const a = document.createElement('a')
             a.href = docxUrl
-            a.setAttribute('download', 'chart-download')
+            a.setAttribute('download', document_name)
             a.click()
           }
         } else {
