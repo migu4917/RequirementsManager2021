@@ -221,7 +221,7 @@
           const docxUrl = 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,' + base64_str
           // 如果浏览器支持msSaveOrOpenBlob方法（也就是使用IE浏览器的时候），那么调用该方法去下载图片
           if (window.navigator.msSaveOrOpenBlob) {
-            var bstr = atob(docxUrl.split(',')[1])
+            var bstr = atob(base64_str)
             var n = bstr.length
             var u8arr = new Uint8Array(n)
             while (n--) {

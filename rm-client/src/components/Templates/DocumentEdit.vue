@@ -134,6 +134,8 @@
                 <span style="color: black;">用户需求分类结果</span>
               </div>
               <!-- 表格 -->
+              <!-- 两个下拉选择框，选择aspect和label显示在表格中 -->
+              <!-- 或者两行复选框，至多展示五个表格 -->
               <el-table></el-table>
             </el-card>
           </el-row>
@@ -175,7 +177,11 @@
         // comments upload
         commentsFile: null,
         // wordcloud image base64
-        wordcloud_img: ''
+        wordcloud_img: '',
+        // classify result
+        classifyResultTable: null,
+        classifyAspect: '',
+        classifyLabel: ''
       }
     },
     methods: {
@@ -208,6 +214,9 @@
         this.comments_file_name = ''
         this.commentsFile = null
         this.wordcloud_img = ''
+        this.classifyResultTable = null
+        this.classifyAspect = ''
+        this.classifyLabel = ''
       },
       editDocument: function() {
         this.$messageBox('确认提交该模板？(该操作不可逆)', {
