@@ -213,6 +213,7 @@
             'document_id': document_id
           }
         })
+        // https://zhuanlan.zhihu.com/p/129763954
         if (res.meta.status === 200) {
           this.$message.success(res.meta.msg)
           // handle base64
