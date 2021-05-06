@@ -136,7 +136,34 @@
               <!-- 表格 -->
               <!-- 两个下拉选择框，选择aspect和label显示在表格中 -->
               <!-- 或者两行复选框，至多展示五个表格 -->
-              <el-table></el-table>
+              <el-form label-width="auto" v-if="classifyResultTable != null">
+                <el-form-item v-if="classifyResultTable != null" label="Aspect">
+                  <el-select v-model="classifyAspect" clearable filterable placeholder="请选择一个用户需求数据集">
+                    <el-option v-for="aspect in Object.keys(classifyResultTable)"
+                      :key="aspect"
+                      :label="aspect"
+                      :value="aspect">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item v-if="classifyResultTable != null && classifyAspect.length != 0" label="Label">
+                  <el-select v-model="classifyLabel" clearable filterable placeholder="请选择一个用户需求数据集">
+                    <el-option v-for="label in Object.keys(classifyResultTable[classifyAspect])"
+                      :key="label"
+                      :label="label"
+                      :value="label">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+              <el-table v-if="classifyResultTable != null && classifyAspect.length != 0 && classifyLabel.length != 0" :data="classifyResultTable[classifyAspect][classifyLabel]">
+                <el-table-column type="index" label="#"></el-table-column>
+                <el-table-column label="comments">
+                  <template slot-scope="scope">
+                    <span>{{scope.row}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
             </el-card>
           </el-row>
         </el-tab-pane>
@@ -363,7 +390,8 @@
         if (res.meta.status === 200) {
           this.$message.success(res.meta.msg)
           // let img_base64_str = res.data.img_base64
-          console.log(res.data.classify_result);
+          this.classifyResultTable = res.data.classify_result
+          console.log(this.classifyResultTable);
         } else {
           this.$message.error(res.meta.msg)
         }
