@@ -5,26 +5,36 @@ from gensim.models import KeyedVectors
 import time
 from sklearn.neural_network import MLPClassifier
 from typing import List, Dict
-import re
-import jieba
 
-label_table = {'additional_cost': 0,
-               'functional_complaint': 1,
-               'compatibility_issue': 2,
-               'crashing': 3,
-               'feature_removal': 4,
-               'feature_request': 5,
-               'network_problem': 6,
-               'privacy_and_ethical_issue': 7,
-               'resource_heavy': 8,
-               'response_time': 9,
-               'user_interface': 10,
-               'safety': 11,
-               'installation_issue': 12,
-               'traffic_wasting': 13,
-               'content': 14,
-               'update_issue': 15,
-               'other': 16}
+from preprocess import filter_stop_words, jieba_cut_comment
+
+label_table = {'additional_cost': 0,            # 额外开销  性能1
+               'functional_complaint': 1,       # 功能问题  功能0
+               'compatibility_issue': 2,        # 兼容问题  可靠3
+               'crashing': 3,                   # 崩溃     可靠3
+               'feature_removal': 4,            # 特性移除  功能0
+               'feature_request': 5,            # 增加特性  功能0
+               'network_problem': 6,            # 网络问题  可靠3
+               'privacy_and_ethical_issue': 7,  # 隐私道德  安全2
+               'resource_heavy': 8,             # 资源占用  性能1
+               'response_time': 9,              # 响应时间  性能1
+               'user_interface': 10,            # 界面交互  易用4
+               'safety': 11,                    # 财产安全  安全2
+               'installation_issue': 12,        # 安装问题  可靠3
+               'traffic_wasting': 13,           # 流量浪费  性能1
+               'content': 14,                   # 内容抱怨  功能0
+               'update_issue': 15,              # 更新问题  可靠3
+               'other': 16}                     # 其他
+
+# 功能 1 4 5 14
+# 性能 0 8 9 13
+# 安全 7 11
+# 可靠 2 3 6 12 15
+# 易用 10
+# [1, 0, 3, 3,
+#   0, 0, 3, 2,
+#   1, 1, 4, 2,
+#   3, 1, 0, 3]
 
 label_list = ['additional_cost', 'functional_complaint', 'compatibility_issue', 'crashing',
               'feature_removal', 'feature_request', 'network_problem', 'privacy_and_ethical_issue',
@@ -35,41 +45,6 @@ _tencent_file = \
     'd:\\RequirementsManager2021\\comments-crawler\\tecent_ailab_word2vec\\Tencent_AILab_ChineseEmbedding_2M.twv'
 _wv_from_text = None
 _MAX_WORD_COUNT = 2000000
-
-stop_words_set = set()
-
-
-def _load_stop_words_file(file_name):
-    with open(file_name, 'r', encoding='utf-8') as stop_word_file:
-        for line in stop_word_file:
-            stop_words_set.add(line.rstrip())
-
-
-def _filter_stop_words(words: List) -> List:
-    if len(stop_words_set) == 0:
-        _load_stop_words_file('./static/哈工大停用词表.txt')
-
-    def is_useful_word(word: str):
-        s = word.strip()
-        return len(s) > 0 and s not in stop_words_set and not re.match(r'(\d|\.)+(?!(\W))', s)
-
-    return list(filter(is_useful_word, words))
-
-
-def jieba_cut_comment(comment: str) -> List:
-    # 判断一个unicode是否是汉字
-    def is_chinese(uchar):
-        return u'\u4e00' <= uchar <= u'\u9fa5'
-
-    cut_result = []
-    seg_list = jieba.lcut(comment)
-    for seg in seg_list:
-        seg = seg.lower()
-        seg = re.sub(r'[\d_%]+', '', seg.strip())
-        if not is_chinese(seg):
-            continue
-        cut_result.append(seg)
-    return cut_result
 
 
 def _tencent_embedding(comments: pd.Series) -> pd.DataFrame:
@@ -101,7 +76,7 @@ def _tencent_embedding(comments: pd.Series) -> pd.DataFrame:
     data_X = list()
     for comment in comments:
         data_X.append(convert_word2vec(
-            _filter_stop_words(jieba_cut_comment(comment))))
+            filter_stop_words(jieba_cut_comment(comment))))
     print('cannot find {} words, {}'.format(len(noword), list(noword)))
     data_X = pd.DataFrame(data_X)
     print(data_X.head())
@@ -125,7 +100,10 @@ def _result2list(comments: pd.Series, y_pred: np.ndarray) -> Dict:
     res = dict()
     for aspect in aspect_list:
         res.setdefault(aspect, dict())
-    label2aspect_index = [1, 3, 0, 3, 0, 0, 0, 3, 3, 2, 2, 1, 1, 1, 3, 4]
+    label2aspect_index = [1, 0, 3, 3,
+                            0, 0, 3, 2,
+                            1, 1, 4, 2,
+                            3, 1, 0, 3]
     for i in range(len(label2aspect_index)):
         label = label_list[i]
         aspect = aspect_list[label2aspect_index[i]]
@@ -133,7 +111,7 @@ def _result2list(comments: pd.Series, y_pred: np.ndarray) -> Dict:
     rows, cols = y_pred.shape
     for i in range(rows - 1):
         for j in range(cols - 1):
-            if y_pred[i, j] == 1:
+            if y_pred[i, j] == 1 and j < len(label2aspect_index):
                 label = label_list[j]
                 aspect = aspect_list[label2aspect_index[j]]
                 comment = comments[i]
