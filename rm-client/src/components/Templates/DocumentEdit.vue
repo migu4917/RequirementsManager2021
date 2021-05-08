@@ -89,7 +89,7 @@
           <!-- 用户需求文件下拉列表 -->
           <!-- 选择一个用户需求 -->
           <el-row :gutter="20">
-            <el-col :span="6">
+            <el-col :span="5">
               <el-select v-model="comments_file_name" clearable filterable placeholder="请选择一个用户需求数据集">
                 <el-option
                  v-for="comments in chosenDocument.comments_file_list"
@@ -102,67 +102,86 @@
             <!-- 用户需求上传按钮 -->
             <el-col :span="5">
               <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                <el-button type="success" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">用户需求上传</el-button>
+                <el-button slot="trigger" size="small" type="primary">
+                  选取文件<i class="el-icon-document"></i>
+                </el-button>
+                <el-button type="success" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">
+                  用户需求上传<i class="el-icon-upload"></i>
+                </el-button>
                 <div slot="tip" class="el-upload__tip">只能上传csv文件，且不超过500kb</div>
               </el-upload>
             </el-col>
             <!-- 用户需求分类 -->
-            <el-col :span="3">
-              <el-button type="primary" size="small" @click="doClassification()">用户需求分类</el-button>
+            <el-col :span="2">
+              <el-button type="primary" size="small" @click="doClassification()">
+                用户需求分类<i class="el-icon-s-marketing"></i>
+              </el-button>
             </el-col>
             <!-- 用户需求词云按钮 -->
-            <el-col :span="3">
-              <el-button type="info" size="small" @click="getWordCloud()">生成词云</el-button>
+            <el-col :span="2">
+              <el-button type="warning" style="margin-left: 10px;" size="small" @click="getWordCloud()">
+                生成词云<i class="el-icon-picture"></i>
+              </el-button>
             </el-col>
           </el-row>
           <el-row :gutter="20" style="margin-bottom: 20px;">
             <!-- 词云 -->
-            <el-card class="box-card" shadow="hover">
+            <el-card class="inner-box-card" shadow="hover">
               <div slot="header">
                 <span style="color: black;">用户需求词云{{': ' + this.comments_file_name}}</span>
               </div>
               <div v-if="this.wordcloud_img.length > 0">
                 <el-tooltip effect="dark" :content="'所属数据集为：'+this.comments_file_name" placement="top-start">
-                  <el-image :src="this.wordcloud_img"></el-image>
+                  <div style="position:relative;left:33%;width:38%;"><el-image :src="this.wordcloud_img"></el-image></div>
                 </el-tooltip>
               </div>
             </el-card>
             <!-- 用户需求分类 -->
-            <el-card class="box-card" shadow="hover" v-loading='loadingTag.classify'>
+            <el-card class="inner-box-card" shadow="hover" v-loading='loadingTag.classify'>
               <div slot="header">
                 <span style="color: black;">用户需求分类结果</span>
               </div>
               <!-- 表格 -->
               <!-- 两个下拉选择框，选择aspect和label显示在表格中 -->
-              <!-- 或者两行复选框，至多展示五个表格 -->
               <el-form label-width="auto" v-if="classifyResultTable != null">
-                <el-form-item v-if="classifyResultTable != null" label="Aspect">
-                  <el-select v-model="classifyAspect" clearable filterable placeholder="请选择一个用户需求数据集">
+                <el-form-item v-if="classifyResultTable != null" label="需求类别">
+                  <el-select v-model="classifyAspect" clearable filterable placeholder="请选择">
                     <el-option v-for="aspect in Object.keys(classifyResultTable)"
                       :key="aspect"
                       :label="aspect"
                       :value="aspect">
                     </el-option>
                   </el-select>
-                </el-form-item>
-                <el-form-item v-if="classifyResultTable != null && classifyAspect.length != 0" label="Label">
-                  <el-select v-model="classifyLabel" clearable filterable placeholder="请选择一个用户需求数据集">
+                  <el-select v-model="classifyLabel" clearable filterable placeholder="请选择"
+                    v-if="classifyResultTable != null && classifyAspect.length != 0" style="margin-left: 10px;">
                     <el-option v-for="label in Object.keys(classifyResultTable[classifyAspect])"
                       :key="label"
                       :label="label"
-                      :value="label">
+                      :value="label"
+                      :disabled="classifyResultTable[classifyAspect][label].length == 0">
                     </el-option>
                   </el-select>
+                  <!-- 相似性分析某些需求 -->
+                  <el-tooltip effect="light" content="分析相似性" placement="top-start">
+                    <el-button size="medium" type="danger" @click="null" style="margin-left: 10px;">
+                      相似性分析<i class="el-icon-data-analysis"></i>
+                    </el-button>
+                  </el-tooltip>
                 </el-form-item>
               </el-form>
+              <!-- 或者两行复选框，至多展示五个表格 -->
+              <!-- <el-checkbox-group :min="1" :max="1" v-model="classifyAspect" v-if="classifyResultTable != null">
+                <el-checkbox v-for="aspect in Object.keys(classifyResultTable)" :key="aspect" :label="aspect"></el-checkbox>
+              </el-checkbox-group> -->
               <el-table v-if="classifyResultTable != null && classifyAspect.length != 0 && classifyLabel.length != 0" :data="classifyResultTable[classifyAspect][classifyLabel]">
                 <el-table-column type="index" label="#"></el-table-column>
-                <el-table-column label="comments">
+                <!-- <el-table-column label="问题类型">{{classifyLabel}}</el-table-column> -->
+                <el-table-column label="用户评论">
                   <template slot-scope="scope">
-                    <span>{{scope.row}}</span>
+                    <span>{{scope.row.comment}}</span>
                   </template>
                 </el-table-column>
+                <!-- <el-table-column label="#" prop="problem"></el-table-column> -->
               </el-table>
             </el-card>
           </el-row>
@@ -404,5 +423,10 @@
 <style lang="less" scoped>
   .box-card {
      margin-top: 20px;
+  }
+  .inner-box-card {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 </style>
