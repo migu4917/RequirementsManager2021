@@ -40,6 +40,15 @@
             <el-form-item label="用户需求数据集列表">
               <div v-if="chosenDocument.comments_file_list.length <= 0">暂无数据</div>
               <el-tag v-for="(fileName, i) in chosenDocument.comments_file_list" :key="(fileName, i)" closable @close="deleteCommentsFile(fileName, i)">{{fileName}}</el-tag>
+              <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
+                <el-button slot="trigger" size="small" type="primary">
+                  选取文件<i class="el-icon-document"></i>
+                </el-button>
+                <el-button type="success" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">
+                  用户需求上传<i class="el-icon-upload"></i>
+                </el-button>
+                <div slot="tip" class="el-upload__tip" style="line-height: 10px;">只能上传csv文件，且不超过500kb</div>
+              </el-upload>
             </el-form-item>
             <el-form-item label="">
               <el-button type="primary" @click="editDocument()">提交更改</el-button>
@@ -100,7 +109,7 @@
               </el-select>
             </el-col>
             <!-- 用户需求上传按钮 -->
-            <el-col :span="5">
+            <!-- <el-col :span="5">
               <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
                 <el-button slot="trigger" size="small" type="primary">
                   选取文件<i class="el-icon-document"></i>
@@ -110,7 +119,7 @@
                 </el-button>
                 <div slot="tip" class="el-upload__tip">只能上传csv文件，且不超过500kb</div>
               </el-upload>
-            </el-col>
+            </el-col> -->
             <!-- 用户需求分类 -->
             <el-col :span="2">
               <el-button type="primary" size="small" @click="doClassification()">
@@ -163,7 +172,7 @@
                   </el-select>
                   <!-- 相似性分析某些需求 -->
                   <el-tooltip effect="light" content="分析相似性" placement="top-start">
-                    <el-button size="medium" type="danger" @click="null" style="margin-left: 10px;">
+                    <el-button size="medium" type="danger" @click="analyzeSimilarity()" style="margin-left: 10px;">
                       相似性分析<i class="el-icon-data-analysis"></i>
                     </el-button>
                   </el-tooltip>
@@ -173,15 +182,14 @@
               <!-- <el-checkbox-group :min="1" :max="1" v-model="classifyAspect" v-if="classifyResultTable != null">
                 <el-checkbox v-for="aspect in Object.keys(classifyResultTable)" :key="aspect" :label="aspect"></el-checkbox>
               </el-checkbox-group> -->
-              <el-table v-if="classifyResultTable != null && classifyAspect.length != 0 && classifyLabel.length != 0" :data="classifyResultTable[classifyAspect][classifyLabel]">
+              <el-table v-if="classifyResultTable != null && classifyAspect.length != 0 && classifyLabel.length != 0" :data="classifyResultTable[classifyAspect][classifyLabel]" default-expand-all stripe border row-key="problem" :tree-props="{children: 'children'}">
                 <el-table-column type="index" label="#"></el-table-column>
-                <!-- <el-table-column label="问题类型">{{classifyLabel}}</el-table-column> -->
                 <el-table-column label="用户评论">
                   <template slot-scope="scope">
                     <span>{{scope.row.comment}}</span>
                   </template>
                 </el-table-column>
-                <!-- <el-table-column label="#" prop="problem"></el-table-column> -->
+                <!-- <el-table-column prop="problem" label="test"></el-table-column> -->
               </el-table>
             </el-card>
           </el-row>
@@ -408,9 +416,36 @@
         })
         if (res.meta.status === 200) {
           this.$message.success(res.meta.msg)
-          // let img_base64_str = res.data.img_base64
           this.classifyResultTable = res.data.classify_result
           console.log(this.classifyResultTable);
+        } else {
+          this.$message.error(res.meta.msg)
+        }
+        this.loadingTag.classify = false
+      },
+      analyzeSimilarity: async function() {
+        if (this.classifyAspect.length === 0 || this.classifyLabel.length === 0) {
+          return this.$message.error('请选择需求类别！')
+        }
+        this.loadingTag.classify = true
+        const {
+          data: res
+        } = await this.$http({
+          method: 'post',
+          url: 'document/comments/similarity',
+          headers: {
+            'Authorization': window.sessionStorage.getItem('token')
+          },
+          data: {
+            'classify_result': this.classifyResultTable,
+            'aspect': this.classifyAspect,
+            'label': this.classifyLabel
+          }
+        })
+        if (res.meta.status === 200) {
+          this.$message.success(res.meta.msg)
+          this.classifyResultTable = res.data.classify_result
+          console.log(this.classifyResultTable[this.classifyAspect][this.classifyLabel]);
         } else {
           this.$message.error(res.meta.msg)
         }

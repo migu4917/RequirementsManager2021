@@ -29,7 +29,7 @@ def _list2wordcloud(comments_list: list):
     for comment in comments_list:
         words += filter_stop_words(jieba_cut_comment(comment))
     # construct a new WordCloud with some specific configuration
-    w = wordcloud.WordCloud(background_color=None, mode="RGBA",
+    w = wordcloud.WordCloud(background_color=None, mode="RGBA", width=600, height=300,
                             font_path=font_path, max_words=120, collocations=False)
     # filter the stop words
     # generate
