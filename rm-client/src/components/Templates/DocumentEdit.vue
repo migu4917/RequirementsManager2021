@@ -41,10 +41,10 @@
               <div v-if="chosenDocument.comments_file_list.length <= 0">暂无数据</div>
               <el-tag v-for="(fileName, i) in chosenDocument.comments_file_list" :key="(fileName, i)" closable @close="deleteCommentsFile(fileName, i)">{{fileName}}</el-tag>
               <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
-                <el-button slot="trigger" size="small" type="primary">
+                <el-button slot="trigger" size="small" type="success">
                   选取文件<i class="el-icon-document"></i>
                 </el-button>
-                <el-button type="success" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">
+                <el-button type="warnig" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">
                   用户需求上传<i class="el-icon-upload"></i>
                 </el-button>
                 <div slot="tip" class="el-upload__tip" style="line-height: 10px;">只能上传csv文件，且不超过500kb</div>
