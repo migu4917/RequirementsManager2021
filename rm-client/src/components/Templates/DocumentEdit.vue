@@ -121,13 +121,11 @@
               </el-upload>
             </el-col> -->
             <!-- 用户需求分类 -->
-            <el-col :span="2">
+            <el-col :span="6">
               <el-button type="primary" size="small" @click="doClassification()">
                 用户需求分类<i class="el-icon-s-marketing"></i>
               </el-button>
-            </el-col>
             <!-- 用户需求词云按钮 -->
-            <el-col :span="2">
               <el-button type="warning" style="margin-left: 10px;" size="small" @click="getWordCloud()">
                 生成词云<i class="el-icon-picture"></i>
               </el-button>
@@ -182,7 +180,12 @@
               <!-- <el-checkbox-group :min="1" :max="1" v-model="classifyAspect" v-if="classifyResultTable != null">
                 <el-checkbox v-for="aspect in Object.keys(classifyResultTable)" :key="aspect" :label="aspect"></el-checkbox>
               </el-checkbox-group> -->
-              <el-table v-if="classifyResultTable != null && classifyAspect.length != 0 && classifyLabel.length != 0" :data="classifyResultTable[classifyAspect][classifyLabel]" default-expand-all stripe border row-key="problem" :tree-props="{children: 'children'}">
+              <el-table v-if="classifyResultTable != null && classifyAspect.length != 0 && classifyLabel.length != 0"
+                :data="classifyResultTable[classifyAspect][classifyLabel]"
+                default-expand-all border
+                row-key="comment"
+                :tree-props="{children: 'children'}"
+                :row-class-name="getTableRowClassName">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column label="用户评论">
                   <template slot-scope="scope">
@@ -450,6 +453,13 @@
           this.$message.error(res.meta.msg)
         }
         this.loadingTag.classify = false
+      },
+      getTableRowClassName: function({row, rowIndex}) {
+        if (row.problem > 0) {
+          let index = (parseInt(row.problem) - 1) % 5 + 1
+          return 'row' + index
+        }
+        return ''
       }
     }
   }
@@ -463,5 +473,26 @@
     margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
+  }
+</style>
+<style>
+  .el-table .row1 {
+    background: oldlace;
+  }
+
+  .el-table .row2 {
+    background: #f0f9eb;
+  }
+
+  .el-table .row3 {
+    background: #CCFFFF;
+  }
+
+  .el-table .row4 {
+    background: #CCCCCC;
+  }
+
+  .el-table .row5 {
+    background: #FFCCCC;
   }
 </style>

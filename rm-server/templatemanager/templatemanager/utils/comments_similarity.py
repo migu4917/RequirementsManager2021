@@ -55,19 +55,16 @@ def cluster_by_similarity(commentsDictList: List):
                     'comment': comment,
                     'problem': type_index
                 })
-                type_index += 1
             comments2type.append({
                 'comment': head,
                 'problem': type_index,
                 'children': children
             })
-            type_index += 1
         else:
             comments2type.append({
                 'comment': head,
                 'problem': type_index
             })
-            type_index += 1
         type_index += 1
     # for s in res:
     #     for comment in s:
