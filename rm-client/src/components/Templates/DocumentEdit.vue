@@ -71,13 +71,13 @@
               {{ line }}
               </el-tag>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="12">
               <el-form label-width="auto" v-if="outlintIndex >= 0">
                 <el-form-item label="大纲">
                   <el-input v-model="chosenDocument.outline[outlintIndex]"></el-input>
                 </el-form-item>
                 <el-form-item label="内容">
-                  <el-input v-model="chosenDocument.contents[outlintIndex]" type="textarea" :autosize="{minRows: 5,maxRows: 10}"></el-input>
+                  <el-input v-model="chosenDocument.contents[outlintIndex]" type="textarea" :autosize="{minRows: 8,maxRows: 20}"></el-input>
                 </el-form-item>
                 <el-form-item label="">
                   <el-button type="primary" @click="editDocument()">提交更改</el-button>
