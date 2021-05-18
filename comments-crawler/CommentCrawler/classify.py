@@ -95,3 +95,22 @@ if __name__ == '__main__':
     with open(path, 'rb') as f:
         model = pickle.load(f)
     # y_pred = model.predict()
+
+
+def load_model():
+    pass
+
+def embedding(comments):
+    model = load_model()
+
+    for comment in comments:
+        words = filter_stop_words(jieba_cut_commment(comment))
+        cnt = 0.0
+        res = np.zeros(200)
+        for word in words:
+            if word in model:
+                res += model.get_vector(word)
+                cnt += 1.0
+        res = res / cnt if cnt > 0 else res 
+
+    

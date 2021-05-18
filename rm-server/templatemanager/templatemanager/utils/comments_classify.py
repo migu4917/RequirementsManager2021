@@ -6,7 +6,7 @@ from typing import List, Dict
 
 from templatemanager.utils.preprocess import tencent_embedding
 
-label_table = {'additional_cost': 0,  # 额外开销  性能1
+label_table = {'additional_cost': 0,  # 额外开销  功能0
                'functional_complaint': 1,  # 功能问题  功能0
                'compatibility_issue': 2,  # 兼容问题  可靠3
                'crashing': 3,  # 崩溃     可靠3
@@ -20,12 +20,12 @@ label_table = {'additional_cost': 0,  # 额外开销  性能1
                'safety': 11,  # 财产安全  安全2
                'installation_issue': 12,  # 安装问题  可靠3
                'traffic_wasting': 13,  # 流量浪费  性能1
-               'content': 14,  # 内容抱怨  功能0
+               'content': 14,  # 内容抱怨  易用4
                'update_issue': 15,  # 更新问题  可靠3
                'other': 16}  # 其他
 
 label2chinese = {
-    'additional_cost': '额外开销',  # 额外开销  性能1
+    'additional_cost': '额外开销',  # 额外开销  功能0
     'functional_complaint': '功能问题',  # 功能问题  功能0
     'compatibility_issue': '兼容问题',  # 兼容问题  可靠3
     'crashing': '崩溃',  # 崩溃     可靠3
@@ -39,15 +39,15 @@ label2chinese = {
     'safety': '财产安全',  # 财产安全  安全2
     'installation_issue': '安装问题',  # 安装问题  可靠3
     'traffic_wasting': '流量浪费',  # 流量浪费  性能1
-    'content': '内容抱怨',  # 内容抱怨  功能0
+    'content': '内容抱怨',  # 内容抱怨  易用4
     'update_issue': '更新问题',  # 更新问题  可靠3
     'other': '16'}  # 其他
 
-# 功能 1 4 5 14
-# 性能 0 8 9 13
+# 功能 0 1 4 5
+# 性能 8 9 13
 # 安全 7 11
 # 可靠 2 3 6 12 15
-# 易用 10
+# 易用 10 14
 # [1, 0, 3, 3,
 #   0, 0, 3, 2,
 #   1, 1, 4, 2,
@@ -72,10 +72,10 @@ def _mlp_pred(x_test):
 
 def _result2list(comments: pd.Series, y_pred: np.ndarray) -> Dict:
     aspect_list = ['功能', '性能', '安全', '可靠', '易用']
-    label2aspect_index = [1, 0, 3, 3,
+    label2aspect_index = [0, 0, 3, 3,
                           0, 0, 3, 2,
                           1, 1, 4, 2,
-                          3, 1, 0, 3]
+                          3, 1, 4, 3]
     res = dict()
     for aspect in aspect_list:
         res.setdefault(aspect, dict())

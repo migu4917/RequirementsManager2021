@@ -63,6 +63,12 @@
               <span>模板列表</span>
             </template>
           </el-menu-item>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
+            <i class="el-icon-files"></i>
+            <span>文档管理</span>
+          </template>
           <el-menu-item index="/templates/documentList"  @click="saveNavStatus('/templates/documentList')">
             <template>
               <i class="el-icon-menu"></i>

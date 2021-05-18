@@ -4,9 +4,10 @@
     <div>
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>模板管理</el-breadcrumb-item>
+        <!-- <el-breadcrumb-item>模板管理</el-breadcrumb-item> -->
         <!-- <el-breadcrumb-item :to="{ path: '/templates/templateList' }">模板列表</el-breadcrumb-item> -->
         <el-breadcrumb-item>文档管理</el-breadcrumb-item>
+        <el-breadcrumb-item>文档列表</el-breadcrumb-item>
         <!-- <el-breadcrumb-item>文档名-记得改</el-breadcrumb-item> -->
       </el-breadcrumb>
     </div>
@@ -51,7 +52,7 @@
     </el-card>
      <!-- 创建新文档对话框 -->
      <el-dialog title="创建新的文档"  width="40%" :visible.sync="dialogVisible">
-       <el-form>
+       <el-form label-width="auto">
          <!-- 选择一个模板 -->
          <el-form-item label="选择一个模板">
            <!-- 下拉选择模板 选择器 -->
@@ -186,7 +187,7 @@
                 'Authorization': window.sessionStorage.getItem('token')
               },
               data: {
-                document_id: this.document_id
+                document_id: document_id
               }
             })
             if (res.meta.status === 200) {
@@ -219,7 +220,9 @@
           // handle base64
           let base64_str = res.data.file_base64
           // data:application/msword;base64,
-          const docxUrl = 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,' + base64_str
+          const docxUrl =
+            'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,'
+            + base64_str
           // 如果浏览器支持msSaveOrOpenBlob方法（也就是使用IE浏览器的时候），那么调用该方法去下载图片
           if (window.navigator.msSaveOrOpenBlob) {
             var bstr = atob(base64_str)

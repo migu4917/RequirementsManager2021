@@ -29,7 +29,7 @@
             </el-form-item>
             <el-form-item label="文档简介">
               <el-col :span="11">
-                <el-input type="textarea" v-model="chosenDocument.introduction" autosize></el-input>
+                <el-input type="textarea" v-model="chosenDocument.introduction" :autosize="{minRows: 6,maxRows: 20}"></el-input>
               </el-col>
             </el-form-item>
             <el-form-item label="最后修改时间">
@@ -55,46 +55,8 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <!-- 文档内容编辑 -->
-        <el-tab-pane label="文档内容编辑" name="1" v-loading="loadingTag.info">
-          <el-row :gutter="20" style="margin-bottom: 20px;">
-            <el-col :span="6">
-              <div><span style="color: black;">目录</span></div>
-            </el-col>
-            <el-col :span="18"></el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <!-- 文档目录区 -->
-            <el-col :span="6">
-              <el-tag :key="(line, i)" v-for="(line, i) in chosenDocument.outline" closable
-               @click="outlintIndex = i" effect="plain" @close="deleteOutline(line, i)">
-              {{ line }}
-              </el-tag>
-            </el-col>
-            <el-col :span="12">
-              <el-form label-width="auto" v-if="outlintIndex >= 0">
-                <el-form-item label="大纲">
-                  <el-input v-model="chosenDocument.outline[outlintIndex]"></el-input>
-                </el-form-item>
-                <el-form-item label="内容">
-                  <el-input v-model="chosenDocument.contents[outlintIndex]" type="textarea" :autosize="{minRows: 8,maxRows: 20}"></el-input>
-                </el-form-item>
-                <el-form-item label="">
-                  <el-button type="primary" @click="editDocument()">提交更改</el-button>
-                </el-form-item>
-              </el-form>
-            </el-col>
-            <!-- 需求表格区 -->
-            <!-- <el-col :span="18"> -->
-              <!-- 加key是为了刷新子页面 -->
-              <!-- https://segmentfault.com/q/1010000015992883 -->
-              <!-- https://blog.csdn.net/u010176097/article/details/81252417 -->
-              <!-- <router-view :key="$route.fullPath" @fresh="fresh"></router-view> -->
-            <!-- </el-col> -->
-          </el-row>
-        </el-tab-pane>
         <!-- 用户需求分析区域 -->
-        <el-tab-pane label="用户反馈管理和分析" name="2" v-loading="loadingTag.info">
+        <el-tab-pane label="用户反馈管理和分析" name="1" v-loading="loadingTag.info">
           <!-- 用户需求文件下拉列表 -->
           <!-- 选择一个用户需求 -->
           <el-row :gutter="20">
@@ -109,7 +71,7 @@
               </el-select>
             </el-col>
             <!-- 用户需求上传按钮 -->
-            <!-- <el-col :span="5">
+            <el-col :span="5">
               <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
                 <el-button slot="trigger" size="small" type="primary">
                   选取文件<i class="el-icon-document"></i>
@@ -119,7 +81,7 @@
                 </el-button>
                 <div slot="tip" class="el-upload__tip">只能上传csv文件，且不超过500kb</div>
               </el-upload>
-            </el-col> -->
+            </el-col>
             <!-- 用户需求分类 -->
             <el-col :span="6">
               <el-button type="primary" size="small" @click="doClassification()">
@@ -135,7 +97,7 @@
             <!-- 词云 -->
             <el-card class="inner-box-card" shadow="hover">
               <div slot="header">
-                <span style="color: black;">用户需求词云{{': ' + this.comments_file_name}}</span>
+                <span style="color: black;">用户需求词云</span>
               </div>
               <div v-if="this.wordcloud_img.length > 0">
                 <el-tooltip effect="dark" :content="'所属数据集为：'+this.comments_file_name" placement="top-start">
@@ -185,7 +147,8 @@
                 default-expand-all border
                 row-key="comment"
                 :tree-props="{children: 'children'}"
-                :row-class-name="getTableRowClassName">
+                :row-class-name="getTableRowClassName"
+                height="400">
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column label="用户评论">
                   <template slot-scope="scope">
@@ -195,6 +158,46 @@
                 <!-- <el-table-column prop="problem" label="test"></el-table-column> -->
               </el-table>
             </el-card>
+          </el-row>
+        </el-tab-pane>
+        <!-- 文档内容编辑 -->
+        <el-tab-pane label="文档内容编辑" name="2" v-loading="loadingTag.info">
+          <el-row :gutter="20" style="margin-bottom: 20px;">
+            <el-col :span="6">
+              <div><span style="color: black;">目录</span></div>
+            </el-col>
+            <el-col :span="18"></el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <!-- 文档目录区 -->
+            <el-col :span="6">
+              <div :key="(line, i)" v-for="(line, i) in chosenDocument.outline">
+                <el-tag closable
+                 @click="outlintIndex = i" effect="plain" @close="deleteOutline(line, i)">
+                {{ line }}
+                </el-tag>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <el-form label-width="auto" v-if="outlintIndex >= 0">
+                <el-form-item label="大纲">
+                  <el-input v-model="chosenDocument.outline[outlintIndex]"></el-input>
+                </el-form-item>
+                <el-form-item label="内容">
+                  <el-input v-model="chosenDocument.contents[outlintIndex]" type="textarea" :autosize="{minRows: 8,maxRows: 20}"></el-input>
+                </el-form-item>
+                <el-form-item label="">
+                  <el-button type="primary" @click="editDocument()">提交更改</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <!-- 需求表格区 -->
+            <!-- <el-col :span="18"> -->
+              <!-- 加key是为了刷新子页面 -->
+              <!-- https://segmentfault.com/q/1010000015992883 -->
+              <!-- https://blog.csdn.net/u010176097/article/details/81252417 -->
+              <!-- <router-view :key="$route.fullPath" @fresh="fresh"></router-view> -->
+            <!-- </el-col> -->
           </el-row>
         </el-tab-pane>
       </el-tabs>

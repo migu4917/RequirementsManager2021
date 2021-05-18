@@ -73,27 +73,38 @@
       <!-- 头部提示 -->
       <el-alert title="从文本导入模板" type="info" center show-icon></el-alert>
       <!-- 上传功能主体 -->
-      <el-tabs tab-position="left" style="overflow: auto;">
+      <el-tabs tab-position="left" style="overflow: auto; margin-top: 10px;">
         <el-tab-pane label="上传文件" name="0">
-        <el-button style="margin-bottom: 10px;margin-top: 10px;" size="small" type="primary" @click="submitUploadFile()">
-          上传至服务器
-        </el-button>
-        <el-tag v-for="tag in uploadFileTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentUploadFileTag"
-          style="margin-left: 10px;">
-          {{tag.name}}
-        </el-tag>
-        <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :auto-upload="true" accept=".docx">
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击选取文件</em></div>
-          <div slot="tip" class="el-upload__tip">只能上传docx文件</div>
-        </el-upload>
-        <el-input v-model="introduction" type="textarea" :rows="2" placeholder="请输入文档简介" style="width: 40%;margin-top: 10px;margin-bottom: 10px;"></el-input>
-        <div>
-          <el-button type="success" size="small" @click="createTemplate()">创建模板</el-button>
-          <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag" style="margin-left: 10px;">
+          <el-button style="margin-bottom: 10px;margin-top: 10px;" size="small" type="primary" @click="submitUploadFile()">
+            上传至服务器
+          </el-button>
+          <el-tag v-for="tag in uploadFileTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentUploadFileTag"
+            style="margin-left: 10px;">
             {{tag.name}}
           </el-tag>
-        </div>
+          <el-upload action="" :multiple="false" :limit="1" drag :http-request="addUploadFile" :auto-upload="true" accept=".docx">
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击选取文件</em></div>
+            <div slot="tip" class="el-upload__tip">只能上传docx文件</div>
+          </el-upload>
+        </el-tab-pane>
+        <el-tab-pane label="模板信息" name="1">
+          <el-form>
+            <el-form-item label="模板名称">
+              <el-input v-model="new_temp_name" style="width: 60%;" placeholder="请输入模板名称"></el-input>
+            </el-form-item>
+            <el-form-item label="模板简介">
+              <el-input v-model="introduction" type="textarea" :rows="4" placeholder="请输入模板简介" style="width: 60%;"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <div>
+                <el-button type="success" size="small" @click="createTemplate()">创建模板</el-button>
+                <el-tag v-for="tag in itemizeTags" :key="tag.name" :type="tag.type" v-show="tag.name === currentItemizeTag" style="margin-left: 10px;">
+                  {{tag.name}}
+                </el-tag>
+              </div>
+            </el-form-item>
+          </el-form>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -110,6 +121,7 @@ export default {
     return {
       tempList: [],
       introduction: '',
+      new_temp_name: '',
       // variable about upload and create
       uploadFile: null,
       uploadFileToken: '',
