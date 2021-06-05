@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
 
 def load_model():
-    pass
+    return None
 
 def embedding(comments):
     model = load_model()

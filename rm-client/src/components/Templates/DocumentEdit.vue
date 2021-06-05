@@ -37,7 +37,7 @@
                 <el-input v-model="chosenDocument.last_time" :disabled="true"></el-input>
               </el-col>
             </el-form-item>
-            <el-form-item label="用户需求数据集列表">
+            <el-form-item label="用户反馈数据集列表">
               <div v-if="chosenDocument.comments_file_list.length <= 0">暂无数据</div>
               <el-tag v-for="(fileName, i) in chosenDocument.comments_file_list" :key="(fileName, i)" closable @close="deleteCommentsFile(fileName, i)">{{fileName}}</el-tag>
               <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
@@ -45,7 +45,7 @@
                   选取文件<i class="el-icon-document"></i>
                 </el-button>
                 <el-button type="warnig" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">
-                  用户需求上传<i class="el-icon-upload"></i>
+                  用户反馈上传<i class="el-icon-upload"></i>
                 </el-button>
                 <div slot="tip" class="el-upload__tip" style="line-height: 10px;">只能上传csv文件，且不超过500kb</div>
               </el-upload>
@@ -55,13 +55,13 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <!-- 用户需求分析区域 -->
+        <!-- 用户反馈分析区域 -->
         <el-tab-pane label="用户反馈管理和分析" name="1" v-loading="loadingTag.info">
-          <!-- 用户需求文件下拉列表 -->
-          <!-- 选择一个用户需求 -->
+          <!-- 用户反馈文件下拉列表 -->
+          <!-- 选择一个用户反馈 -->
           <el-row :gutter="20">
             <el-col :span="5">
-              <el-select v-model="comments_file_name" clearable filterable placeholder="请选择一个用户需求数据集">
+              <el-select v-model="comments_file_name" clearable filterable placeholder="请选择一个用户反馈数据集">
                 <el-option
                  v-for="comments in chosenDocument.comments_file_list"
                  :key="comments"
@@ -70,24 +70,24 @@
                 </el-option>
               </el-select>
             </el-col>
-            <!-- 用户需求上传按钮 -->
+            <!-- 用户反馈上传按钮 -->
             <el-col :span="5">
               <el-upload :limit="1" :auto-upload="true" action="" :multiple="false" accept=".csv" :http-request="addCommentsFile">
                 <el-button slot="trigger" size="small" type="primary">
                   选取文件<i class="el-icon-document"></i>
                 </el-button>
                 <el-button type="success" style="margin-left: 10px;" size="small" @click="submitCommentsFile()">
-                  用户需求上传<i class="el-icon-upload"></i>
+                  用户反馈上传<i class="el-icon-upload"></i>
                 </el-button>
                 <div slot="tip" class="el-upload__tip">只能上传csv文件，且不超过500kb</div>
               </el-upload>
             </el-col>
-            <!-- 用户需求分类 -->
+            <!-- 用户反馈分类 -->
             <el-col :span="6">
               <el-button type="primary" size="small" @click="doClassification()">
-                用户需求分类<i class="el-icon-s-marketing"></i>
+                用户反馈分类<i class="el-icon-s-marketing"></i>
               </el-button>
-            <!-- 用户需求词云按钮 -->
+            <!-- 用户反馈词云按钮 -->
               <el-button type="warning" style="margin-left: 10px;" size="small" @click="getWordCloud()">
                 生成词云<i class="el-icon-picture"></i>
               </el-button>
@@ -97,7 +97,7 @@
             <!-- 词云 -->
             <el-card class="inner-box-card" shadow="hover">
               <div slot="header">
-                <span style="color: black;">用户需求词云</span>
+                <span style="color: black;">用户反馈词云</span>
               </div>
               <div v-if="this.wordcloud_img.length > 0">
                 <el-tooltip effect="dark" :content="'所属数据集为：'+this.comments_file_name" placement="top-start">
@@ -105,10 +105,10 @@
                 </el-tooltip>
               </div>
             </el-card>
-            <!-- 用户需求分类 -->
+            <!-- 用户反馈分类 -->
             <el-card class="inner-box-card" shadow="hover" v-loading='loadingTag.classify'>
               <div slot="header">
-                <span style="color: black;">用户需求分类结果</span>
+                <span style="color: black;">用户反馈分类结果</span>
               </div>
               <!-- 表格 -->
               <!-- 两个下拉选择框，选择aspect和label显示在表格中 -->
@@ -376,7 +376,7 @@
       },
       getWordCloud: async function() {
         if (this.comments_file_name.length == 0) {
-          return this.$message.error('请选择用户需求数据集！')
+          return this.$message.error('请选择用户反馈数据集！')
         }
         const {
           data : res
@@ -404,7 +404,7 @@
       },
       doClassification: async function() {
         if (this.comments_file_name.length == 0) {
-          return this.$message.error('请选择用户需求数据集！')
+          return this.$message.error('请选择用户反馈数据集！')
         }
         this.loadingTag.classify = true
         const {
